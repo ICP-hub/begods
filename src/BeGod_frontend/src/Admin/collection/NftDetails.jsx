@@ -85,7 +85,7 @@ const NftDetails = () => {
   // If there's no NFT data, return a message or redirect back
   if (!nftdata && !loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex items-center justify-center h-screen">
         <p className="text-white">No NFT data found</p>
       </div>
     );
@@ -104,16 +104,16 @@ const NftDetails = () => {
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
       <div className="2xl:mt-[10vh] w-full sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] mx-auto">
         {/* Back Button */}
-        <div className="flex justify-start items-center w-full pt-9 mb-8 hover:cursor-pointer">
+        <div className="flex items-center justify-start w-full mb-8 pt-9 hover:cursor-pointer">
           <div className="hidden sm:block">
             {loading ? <Skeleton width={100} height={35} /> : <BackButton />}
           </div>
         </div>
 
         {/* NFT Details Section */}
-        <div className="flex flex-col md:flex-row mt-8 sm:mt-0 gap-6">
+        <div className="flex flex-col items-start justify-center gap-6 mt-8 md:flex-row sm:mt-0">
           {/* NFT Image */}
-          <div className="flex justify-start mb-4 sm:mb-0">
+          <div className="flex justify-start w-2/5 mb-4 sm:mb-0">
             {loading ? (
               <Skeleton
                 height={350}
@@ -124,15 +124,15 @@ const NftDetails = () => {
               <img
                 src={nftdata[2]?.nonfungible?.thumbnail ?? "Image not found"}
                 alt="NFT Thumbnail"
-                className="object-cover rounded-md w-full max-w-[80%] sm:max-w-[85%] md:max-w-[350px] lg:max-w-[400px] h-auto ml-[40px] sm:ml-0"
+                className="object-contain rounded-md w-full max-w-[80%] sm:max-w-[85%] md:max-w-[350px] lg:max-w-[400px] ml-[40px] sm:ml-0 h-[350px]"
               />
             )}
           </div>
 
           {/* NFT Details Card */}
-          <div className="flex flex-col justify-center w-[95%] sm:w-[86%] md:w-[60%] lg:w-[50%] bg-[#29292c] mb-4 sm:mb-0 rounded-md p-6 gap-4 mx-auto sm:mx-0">
+          <div className="flex flex-col justify-center sm:w-[86%] md:w-[60%] lg:w-[50%] bg-[#29292c] mb-4 sm:mb-0 rounded-md p-6 gap-4 mx-auto sm:mx-0 w-3/5">
             {loading ? (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 h-[320px]">
                 <Skeleton className="h-[25px] w-[90%] sm:w-[80%] md:w-[70%] lg:w-[60%]" />
                 <Skeleton className="h-[25px] w-[85%] sm:w-[70%] md:w-[60%] lg:w-[50%]" />
                 <Skeleton className="h-[25px] w-[70%] sm:w-[60%] md:w-[50%] lg:w-[40%]" />
@@ -142,29 +142,29 @@ const NftDetails = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">NFT Name: </span>
                   <span>
                     {nftdata[2]?.nonfungible?.name ?? "Name not found"}
                   </span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">Collection: </span>
                   <span>{collectiondata[2] || "Not Available"}</span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">NFT ID: </span>
                   <span className="text-yellow-500">{identifier || id}</span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">Owner: </span>
                   <span className="text-green-800">{owner || "Unknown"}</span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">Price: </span>
                   <span>{price || "Not Listed"} ICP</span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">Listed: </span>
                   <span>{isOwned ? "Yes" : "No"}</span>
                 </p>
