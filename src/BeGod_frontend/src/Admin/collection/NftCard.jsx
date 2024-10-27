@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./nftcard.css";
 
-const NftCard = ({ id, list, collectiondata, quantity }) => {
+const NftCard = ({ id, list, collectiondata }) => {
   const name = list[2]?.nonfungible?.name ?? "Name not found";
   const priceBigInt = list[3]?.[0]?.toString() ?? "Price not found";
   const price = Number(priceBigInt) / 100000000;
@@ -66,9 +66,9 @@ const NftCard = ({ id, list, collectiondata, quantity }) => {
               Type: {nftType}
             </h2>
 
-            <h2 className="mt-1 text-xs text-center sm:text-lg">
+            {/* <h2 className="mt-1 text-xs text-center sm:text-lg">
               Quantity: {quantity}
-            </h2>
+            </h2> */}
             <Link
               to={`/Admin/collection/collectionDetails/${id}/nft/${id}`}
               className="flex items-center justify-center w-full"
