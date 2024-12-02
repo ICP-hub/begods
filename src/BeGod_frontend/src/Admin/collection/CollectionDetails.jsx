@@ -20,37 +20,37 @@ import { Box, Button } from "@chakra-ui/react";
 
 const cardTypeList = [
   {
-      cardId: "ALL",
-      displayText: "All"
+    cardId: "ALL",
+    displayText: "All",
   },
   {
-      cardId: "DIVINE",
-      displayText: "Divine"
+    cardId: "DIVINE",
+    displayText: "Divine",
   },
   {
-      cardId: "MYTHICAL",
-      displayText: "Mythical"
+    cardId: "MYTHICAL",
+    displayText: "Mythical",
   },
   {
-      cardId: "RARE",
-      displayText: "Rare"
+    cardId: "RARE",
+    displayText: "Rare",
   },
   {
-      cardId: "UNCOMMON",
-      displayText: "Uncommon"
+    cardId: "UNCOMMON",
+    displayText: "Uncommon",
   },
   {
-      cardId: "COMMON",
-      displayText: "Common"
+    cardId: "COMMON",
+    displayText: "Common",
   },
   {
-      cardId: "PROMO",
-      displayText: "Promo"
+    cardId: "PROMO",
+    displayText: "Promo",
   },
   {
-      cardId: "MISC",
-      displayText: "Misc"
-  }
+    cardId: "MISC",
+    displayText: "Misc",
+  },
 ];
 
 const dropdownItems = {

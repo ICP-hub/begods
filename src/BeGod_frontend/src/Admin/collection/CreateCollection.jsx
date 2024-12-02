@@ -159,13 +159,13 @@ const CreateCollection = () => {
     settotalnft(n);
     try {
       const metadata = JSON.stringify({ description, collColor });
-      // console.log(name, metadata);
+      console.log(name, metadata, "calling collection creation");
       const report = await backendActor?.createExtCollection(
         name,
         base64String,
         metadata
       );
-
+      console.log(report);
       if (report && Array.isArray(report)) {
         const data = await extractPrincipals(report);
         console.log(data[1]);
@@ -203,7 +203,7 @@ const CreateCollection = () => {
     nftFullImage
   ) => {
     try {
-      // console.log("in mint", answ);
+      console.log("in mint", answ);
       const principalString = answ;
       const principal = Principal.fromText(principalString);
       const date = new Date();
@@ -224,7 +224,7 @@ const CreateCollection = () => {
       const metadataContainer = {
         json: metadata,
       };
-      // console.log(principal, nftname, nftdescription, nftimage, nftquantity);
+      console.log(principal, nftname, nftdescription, nftimage, nftquantity);
 
       const result = await backendActor?.mintExtNonFungible(
         principal,
@@ -239,11 +239,11 @@ const CreateCollection = () => {
 
       console.log(result, "nft mint data");
       const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
-      // console.log(es8_price, "price");
+      console.log(es8_price, "price");
       if (result && result.length > 0) {
         result.map((val, key) => {
-          // console.log(key, "in mint");
-          // console.log(val);
+          console.log(key, "in mint");
+          console.log(val);
           getNftTokenId(answ, val[1], es8_price);
         });
       }
@@ -273,7 +273,7 @@ const CreateCollection = () => {
 
   const getNftTokenId = async (answ, nftIdentifier, nftprice) => {
     try {
-      // console.log(answ, nftIdentifier, nftprice);
+      console.log(answ, nftIdentifier, nftprice);
       const principal = Principal.fromText(answ);
       const res = await listPrice(principal, nftIdentifier, nftprice);
       console.log(res, "res data");
@@ -287,7 +287,7 @@ const CreateCollection = () => {
   const listPrice = async (principal, tokenidentifier, price) => {
     try {
       const finalPrice = price;
-
+      console.log("listprice calling");
       const priceE8s = finalPrice ? finalPrice : null;
 
       const request = {
@@ -296,6 +296,7 @@ const CreateCollection = () => {
         price: priceE8s ? [priceE8s] : [],
       };
       const result = await backendActor?.listprice(principal, request);
+      console.log("lisprice called", done);
       if (result) {
         console.log("List Price Result:", result);
       } else {
@@ -418,7 +419,7 @@ const CreateCollection = () => {
       if (!hasError) {
         setTimeout(() => {
           navigate("/admin/collection");
-        }, 2000);
+        }, 5000);
       }
     } catch (error) {
       if (!errorShown) {
