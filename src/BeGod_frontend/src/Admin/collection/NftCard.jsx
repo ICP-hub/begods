@@ -39,7 +39,7 @@ const NftCard = ({ id, list, collectiondata }) => {
         }`}
       >
         {/* Front Side */}
-        <div className="flip-card-front flex items-center justify-center">
+        <div className="flex items-center justify-center flip-card-front">
           <img
             src={image}
             alt={name}
@@ -55,23 +55,23 @@ const NftCard = ({ id, list, collectiondata }) => {
           />
           <div className="absolute inset-0 flex flex-col items-center justify-center bg-black rounded-lg bg-opacity-60">
             <h1 className="text-xl font-extrabold sm:text-2xl lg:text-xl">
-              Name: {name}
+              {name}
             </h1>
             {isValidPrice && (
-              <h2 className="text-xs sm:text-lg mt-1 text-center">
+              <h2 className="mt-1 text-xs text-center sm:text-lg">
                 Price: {price} ICP
               </h2>
             )}
-            <h2 className="text-xs sm:text-lg mt-1 text-center">
+            <h2 className="mt-1 text-xs text-center sm:text-lg">
               Type: {nftType}
             </h2>
 
-            {/* <h2 className="text-xs sm:text-lg mt-1 text-center">
+            {/* <h2 className="mt-1 text-xs text-center sm:text-lg">
               Quantity: {quantity}
             </h2> */}
             <Link
               to={`/Admin/collection/collectionDetails/${id}/nft/${id}`}
-              className="w-full flex justify-center items-center"
+              className="flex items-center justify-center w-full"
               state={{ list, collectiondata }}
             >
               <button className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[150px] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105 font-caslon">

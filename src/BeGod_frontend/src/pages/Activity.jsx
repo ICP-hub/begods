@@ -118,7 +118,7 @@ const Activity = () => {
           <div>
             {loading ? (
               <SkeletonTheme baseColor="#FCD37B1A" highlightColor="#FCD37B1A">
-                <div className="hidden  lg:flex flex-col w-full ">
+                <div className="flex-col hidden w-full lg:flex ">
                   {Array.from({ length: cards_per_page}).map((_, index) => (
                     <Skeleton
                       key={index}
@@ -198,7 +198,7 @@ const Activity = () => {
 
       <div
         style={{ backgroundImage: `url('/Hero/footer 1.png')`, backgroundRepeat: 'no-repeat' }}
-        className="overflow-hidden relative bg-center bg-cover "
+        className="relative overflow-hidden bg-center bg-cover "
       >
         <Footer />
       </div>
