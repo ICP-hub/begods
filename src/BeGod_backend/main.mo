@@ -375,7 +375,7 @@ actor Main {
         throw Error.reject("Unauthorized: Only admins can create a new collection.");
         };
 
-        Cycles.add<system>(500_500_000_000);
+        Cycles.add<system>(800_500_000_000);
         let extToken = await ExtTokenClass.EXTNFT(Principal.fromActor(Main));
         let extCollectionCanisterId = await extToken.getCanisterId();
         let collectionCanisterActor = actor (Principal.toText(extCollectionCanisterId)) : actor {

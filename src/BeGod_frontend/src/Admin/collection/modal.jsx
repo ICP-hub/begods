@@ -50,10 +50,15 @@ const Modal = (props) => {
     type === "edit" ? cardDetails.nftSeason : "Stone Age"
   );
 
-  const [nftFullImage, setNftFullImage] = useState("");
+  const [nftFullImage , setNftFullImage] = useState(
+    type === "edit" ? cardDetails.nftFullImage : ""
+  )
+
   const [nftFullImageURL, setNftFullImageURL] = useState("");
 
-  const [hideImageUpload, updateHideImageUploadStatus] = useState(false);
+  const [hideImageUpload, updateHideImageUploadStatus] = useState(true);
+
+  const [hideFullImageUpload,updateHideFullImageUpload] = useState(true);
 
   // const [nftName, setNftName] = useState("");
   // const [nftType, setNftType] = useState("Common");
@@ -356,7 +361,7 @@ const Modal = (props) => {
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
             Image
-            {type === "add" || hideImageUpload ? (
+            {type === "add" || !hideImageUpload ? (
               <ImageUploader
                 captureUploadedNftImage={captureUploadedNftImage}
                 captureUploadedNftImageFile={captureUploadedNftImageFile}
@@ -369,7 +374,7 @@ const Modal = (props) => {
                   className="object-cover w-full h-full rounded-lg"
                 />
                 <button
-                  onClick={() => updateHideImageUploadStatus(true)}
+                  onClick={() => updateHideImageUploadStatus(false)}
                   className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
                 >
                   <RxCross2 className="text-black" size={15} />
@@ -382,10 +387,26 @@ const Modal = (props) => {
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
             Full Image
-            <ImageUploader
+            {type === "add" || nftFullImage === "" || !hideFullImageUpload ? (
+              <ImageUploader
               captureUploadedNftImage={captureUploadedNftFullImage}
               captureUploadedNftImageFile={captureUploadedNftFullImageFile}
             />
+            ):(
+              <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
+                <img
+                  src={nftFullImage}
+                  alt="Selected"
+                  className="object-cover w-full h-full rounded-lg"
+                />
+                <button
+                  onClick={() => updateHideFullImageUpload(false)}
+                  className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
+                >
+                  <RxCross2 className="text-black" size={15} />
+                </button>
+              </div>
+            )}
           </label>
         </div>
 

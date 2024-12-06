@@ -59,7 +59,7 @@ const Profile = () => {
   const navigate = useNavigate(); 
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  const [remainingNftsCount,updateRemainingNfts] = useState([]);
+  const [remainingNftsCount,updateRemainingNfts] = useState(undefined);
   const [areButtonsDisabled, setAreButtonsDisabled] = useState(false); 
 
   const [searchInput,updateSearchInput] = useState("");
@@ -565,6 +565,7 @@ const currentPage  = useRef(1);
     const collectionDetailsResult = await backendActor.userNFTcollection(collectionId,principal,itemsPerPage,0)
     if(collectionDetailsResult.err){
       updateSelectedList([]);
+      updateRemainingNfts(undefined)
       return []
     }else{
       console.log("profile result",collectionDetailsResult)
@@ -1010,9 +1011,9 @@ console.log("selected list",selectedList)
                             {isPlaced(allCollectionsList[currentDropDownOption].collectionId)?(
                                 <h1 className='bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm flex justify-center items-center'>Order Placed!</h1>
                             ):(
-                              <div className={`relative ${remainingNftsCount>0 && "group"}`}>
+                              <div className={`relative ${remainingNftsCount>0 || remainingNftsCount === undefined ? "group":""}`}>
                               <button 
-                                disabled={remainingNftsCount > 0} 
+                                disabled={remainingNftsCount > 0 || remainingNftsCount === undefined} 
                                 className={`bg-[#FCD378] border-none text-[#000000] h-[35px] w-[150px] rounded-sm ${remainingNftsCount === 0 ? "opacity-100" : "opacity-40 cursor-not-allowed"}`}
                                 onClick={togglePlaceOrderPopup}
                               >
@@ -1325,8 +1326,7 @@ console.log("selected list",selectedList)
               : currentOrderingStatus === buyingStatus.showCollection? " w-[95vw] md:w-[50vw]  lg:w-[60vw] xl:w-[40vw] "
               : "h-[30vh] w-[60vw] md:w-[40vw] md:h-[25vh] lg:w-[30vw] lg:h-[20vh] xl:h-[35vh] xl:w-[26vw]"
           }`}>
-             {!placeOrderLoading && (
-              (isOrderPlaced ? (
+             
                 <div className="relative flex items-center justify-end">
               <button
                 className="text-[#ffffff] absolute bottom-1 top-1"
@@ -1335,17 +1335,7 @@ console.log("selected list",selectedList)
                 <RxCross2 size={20} />
               </button>
             </div>
-              ):(
-                <div className="relative flex items-center justify-end">
-              <button
-                className="text-[#ffffff] absolute bottom-1 top-1"
-                onClick={() => togglePlaceOrderPopup()}
-              >
-                <RxCross2 size={20} />
-              </button>
-            </div>
-              ))
-             )}
+             
             {currentOrderingStatus === buyingStatus.showCollection && (
               <div className="h-[90%]  flex flex-col items-center justify-center gap-2 mt-4">
                 <h1 className="text-xl lg:text-3xl font-semibold text-[#FCD37B] ">CONGRATULATIONS!!!</h1>
@@ -1402,7 +1392,7 @@ console.log("selected list",selectedList)
                     </label>
                     <input
                       type="text"
-                      className="bg-transparent border-0 border-b border-white border-solid"
+                      className="bg-transparent  border-0 border-b border-white border-solid"
                       value={orderEmail}
                       onChange={(e)=>updateOrderEmail(e.target.value)}
                     />
@@ -1472,7 +1462,7 @@ console.log("selected list",selectedList)
                         <option
                           value={eachCountry.id}
                           key={eachCountry.id}
-                          className="bg-black border-0 border-none font-Quicksand"
+                          className="bg-black text-white border-0 border-none font-Quicksand"
                         >
                           {eachCountry.displayText}
                         </option>

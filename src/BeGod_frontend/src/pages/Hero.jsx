@@ -149,6 +149,11 @@ const Hero = () => {
     const [inProgress,updateInProgressStatus] = useState(false);
 
     const handleCurrentIndex  = async(index) => {
+        const currentCollectionId = collections[index].collectionId;
+        const color = collections[index].shadowColor;
+        if(currentCollectionId === collections[currentIndex].collectionId) {
+            return;
+        }
         updateTotalPages(1);
         if(index >= visibleButtons-1 && index >= startIndex) {
             if(index != collections.length-1){
@@ -167,11 +172,7 @@ const Hero = () => {
         if(index )
         console.log("index in handle click",index)
         
-        const currentCollectionId = collections[index].collectionId;
-        const color = collections[index].shadowColor;
-        if(currentCollectionId === collections[currentIndex].collectionId) {
-            return;
-        }
+        
         updateNoCardsStatus(false);
         updateInProgressStatus(true);
         updateSelectedCollectionNftCardsList([]);
