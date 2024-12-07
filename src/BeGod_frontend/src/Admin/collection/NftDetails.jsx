@@ -68,7 +68,7 @@ const NftDetails = () => {
   // If there's no NFT data, return a message or redirect back
   if (!nftdata && !loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex items-center justify-center h-screen">
         <p className="text-white">No NFT data found</p>
       </div>
     );
@@ -81,14 +81,14 @@ const NftDetails = () => {
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
       <div className="2xl:mt-[10vh] w-full sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] mx-auto">
         {/* Back Button */}
-        <div className="flex justify-start items-center w-full pt-9 mb-5 hover:cursor-pointer">
+        <div className="flex items-center justify-start w-full mb-5 pt-9 hover:cursor-pointer">
           <div className="hidden sm:block">
             {loading ? <Skeleton width={100} height={35} /> : <BackButton />}
           </div>
         </div>
 
         {/* NFT Details Section */}
-        <div className="flex flex-col md:flex-row mt-12 sm:mt-0 ">
+        <div className="flex flex-col mt-12 md:flex-row sm:mt-0 ">
           {/* NFT Image */}
           <div className="flex justify-center md:justify-start mb-6 md:mb-0 w-full sm:w-[60%] md:w-[50%]">
             {loading ? (
@@ -119,47 +119,47 @@ const NftDetails = () => {
               </div>
             ) : (
               <div className="flex flex-col gap-4">
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">NFT Name: </span>
                   <span>
                     {nftdata[2]?.nonfungible?.name ?? "Name not found"}
                   </span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">Collection: </span>
                   <span>{collectiondata[2] || "Not Available"}</span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">NFT ID: </span>
                   <span className="text-yellow-500">{nftId || identifier}</span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">Owner: </span>
                   <span className="text-green-800">{owner || "Unknown"}</span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">Price: </span>
                   <span>{price || "Not Listed"} ICP</span>
-                  <span className="font-semibold ml-12 ">Nft Type: </span>
+                  <span className="ml-12 font-semibold ">Nft Type: </span>
                   <span className="mr-1">{metadata?.nftType || "Null"}</span>
                 </p>
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold">Nft Season: </span>
                   <span>{metadata?.nftSeason || "Null"}</span>
                 </p>
 
-                {/* <p className="text-white text-lg">
-                  <span className="font-semibold ml-3 mr-1">Nft Type: </span>
+                {/* <p className="text-lg text-white">
+                  <span className="ml-3 mr-1 font-semibold">Nft Type: </span>
                   <span>{metadata?.nftType || "Null"}</span>
                 </p> */}
-                <p className="text-white text-lg">
+                <p className="text-lg text-white">
                   <span className="font-semibold ">Nft Rarity: </span>
                   <span>{metadata?.newtype || "Null"}</span>
-                  <span className="font-semibold ml-12">Listed: </span>
+                  <span className="ml-12 font-semibold">Listed: </span>
                   <span className="mr-1">{isOwned ? "Yes" : "No"}</span>
                 </p>
 
-                {/* <p className="text-white text-lg">
+                {/* <p className="text-lg text-white">
                   <span className="font-semibold">Listed: </span>
                   <span>{isOwned ? "Yes" : "No"}</span>
                 </p> */}

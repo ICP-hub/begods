@@ -362,6 +362,7 @@ actor Main {
     //     };
     // };
 
+    //remove collection created by any admin
     public shared ({ caller = user }) func removeCollection(collection_id : Principal) : async Text {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
@@ -417,7 +418,7 @@ actor Main {
             throw Error.reject("Unauthorized: Only admins can create a new collection.");
         };
 
-        Cycles.add<system>(800_500_000_000);
+        Cycles.add<system>(850_500_000_000);
         let extToken = await ExtTokenClass.EXTNFT(Principal.fromActor(Main));
         let extCollectionCanisterId = await extToken.getCanisterId();
         let collectionCanisterActor = actor (Principal.toText(extCollectionCanisterId)) : actor {
