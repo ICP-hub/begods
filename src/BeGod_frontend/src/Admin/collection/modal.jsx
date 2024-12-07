@@ -75,16 +75,18 @@ const Modal = (props) => {
 
   const onClickAddButton = () => {
     // event.preventDefault();
-    if (
+    if (nftPrice == 0) {
+      toast.error("Enter the price greater than 0");
+    } else if (
       nftName &&
       nftType &&
       nftQuantity &&
-      nftPrice &&
+      nftPrice != 0 &&
       nftDescription &&
       nftImage &&
       nftImageURL &&
       nftcolor &&
-      arstistname &&
+      // arstistname &&
       newtype &&
       nftSeason &&
       nftFullImage
@@ -114,7 +116,9 @@ const Modal = (props) => {
   };
   const onClickSaveButton = () => {
     // event.preventDefault();
-    if (
+    if (nftPrice == 0) {
+      toast.error("Enter the price greater than 0");
+    } else if (
       nftName &&
       nftType &&
       nftQuantity &&
@@ -123,7 +127,7 @@ const Modal = (props) => {
       nftImage &&
       nftImageURL &&
       nftcolor &&
-      arstistname &&
+      // arstistname &&
       newtype &&
       nftSeason &&
       nftFullImage
@@ -328,6 +332,9 @@ const Modal = (props) => {
               <option value="Asset" className="text-[16px] text-[#8a8686]">
                 Asset
               </option>
+              <option value="Asset" className="text-[16px] text-[#8a8686]">
+                Booster
+              </option>
             </select>
           </label>
 
@@ -348,6 +355,7 @@ const Modal = (props) => {
               type="number"
               min="1"
               pattern="[1-9][0-9]*"
+              placeholder="Enter the quantity"
               className="pl-4 rounded-md h-[38px] p-2 bg-[#29292C] text-[16px] text-[#8a8686]"
             />
           </label>
@@ -355,7 +363,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Image
+            HD Image
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 captureUploadedNftImage={captureUploadedNftImage}
@@ -381,7 +389,27 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Full Image
+            SD Image
+            <ImageUploader
+              captureUploadedNftImage={captureUploadedNftFullImage}
+              captureUploadedNftImageFile={captureUploadedNftFullImageFile}
+            />
+          </label>
+        </div>
+
+        <div className="mt-1">
+          <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+            Full HD Image
+            <ImageUploader
+              captureUploadedNftImage={captureUploadedNftFullImage}
+              captureUploadedNftImageFile={captureUploadedNftFullImageFile}
+            />
+          </label>
+        </div>
+
+        <div className="mt-1">
+          <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+            Full SD Image
             <ImageUploader
               captureUploadedNftImage={captureUploadedNftFullImage}
               captureUploadedNftImageFile={captureUploadedNftFullImageFile}

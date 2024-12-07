@@ -242,8 +242,8 @@ const CreateCollection = () => {
       console.log(es8_price, "price");
       if (result && result.length > 0) {
         result.map((val, key) => {
-          console.log(key, "in mint");
-          console.log(val);
+          // console.log(key, "in mint");
+          // console.log(val);
           getNftTokenId(answ, val[1], es8_price);
         });
       }
@@ -373,10 +373,10 @@ const CreateCollection = () => {
           toast.error("Error in creating collection: " + answ);
           errorShown = true;
         }
-        throw answ;
+        return answ;
       }
       setcanId(answ);
-      if (nftCardsList && nftCardsList.length > 0) {
+      if (nftCardsList && nftCardsList.length > 0 && !hasError) {
         for (let val of nftCardsList) {
           try {
             const mintResult = await mintNFT(
@@ -419,7 +419,7 @@ const CreateCollection = () => {
       if (!hasError) {
         setTimeout(() => {
           navigate("/admin/collection");
-        }, 5000);
+        }, 3000);
       }
     } catch (error) {
       if (!errorShown) {

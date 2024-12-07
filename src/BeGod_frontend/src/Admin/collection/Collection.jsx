@@ -72,9 +72,7 @@ function Collection() {
     const principalString = Principal.fromUint8Array(collectionToDelete._arr);
     if (backendActor) {
       try {
-        const result = await backendActor?.remove_collection_to_map(
-          principalString
-        );
+        const result = await backendActor?.removeCollection(principalString);
         console.log(result);
       } catch (error) {
         console.error("Error deleting collection:", error);
