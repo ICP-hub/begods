@@ -362,6 +362,7 @@ actor Main {
     //     };
     // };
 
+    //remove collection created by any admin
     public shared ({ caller = user }) func removeCollection(collection_id: Principal): async Text {
     if (Principal.isAnonymous(user)) {
         throw Error.reject("User is not authenticated");
