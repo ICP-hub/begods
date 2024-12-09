@@ -732,14 +732,16 @@ console.log("full img",fullImg)
               <div
                 className={`w-[90vw]  md:w-[60vw]   lg:w-[55vw] xl:w-[30vw] ] bg-[#111] text-white font-caslon p-5 pb-10 rounded-md  drop-shadow-lg`}
               >
-                <div className=" flex items-center justify-end">
-                  <button
-                    className="text-[#ffffff]   z-10"
-                    onClick={() => toggleBuyPopup()}
-                  >
-                    <RxCross2 size={20} />
-                  </button>
-                </div>
+                  {currentBuyingStatus === buyingStatus.success && (
+                    <div className=" flex items-center justify-end">
+                    <button
+                      className="text-[#ffffff]   z-10"
+                      onClick={() => toggleBuyPopup()}
+                    >
+                      <RxCross2 size={20} />
+                    </button>
+                  </div>
+                  )}
                   {
                     (showError.show) && (
                     <div className=" flex flex-col items-center justify-center">
@@ -751,7 +753,7 @@ console.log("full img",fullImg)
                
 
                 {!showError.show && currentBuyingStatus === buyingStatus.payment && (
-                  <div className="flex flex-col items-center justify-center">
+                  <div className="h-100% flex flex-col items-center justify-center pt-5  ">
                     <div className="flex items-center w-[90%]">
                       {popUpFirstLoading ? (
                         <div className="relative flex items-center justify-center ">

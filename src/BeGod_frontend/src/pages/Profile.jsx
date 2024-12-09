@@ -86,7 +86,7 @@ const [selectedCity , updateSelectedCity] = useState("");
 const [phoneNo , updatePhoneNumber] = useState(NaN);
 const [orderEmail,updateOrderEmail] = useState("");
 const [streetAddress,updateStreetAddress] = useState('');
-const [pinCode , updatePinCode] = useState(NaN);
+const [pinCode , updatePinCode] = useState("");
 const [landMark,updateLandMark] = useState("");
 const [placeOrderLoading , updatePlaceOrderLoading] = useState(false);
 const [orderMsg,updateOrderMsg] = useState("");
@@ -156,7 +156,8 @@ const onClickOrder = async (orderType) => {
   // Validate email next
   if (
     orderEmail.trim() === "" ||
-    !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(orderEmail)
+    !/^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:\\[\x01-\x7F]|[^\x01-\x08\x0B\x0C\x0E-\x7F"])")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}|(?:\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\]))$/.test(orderEmail)
+
   ) {
     toast.error("Please enter a valid email address.");
     return;
@@ -181,10 +182,16 @@ const onClickOrder = async (orderType) => {
   }
 
   // Validate pin code
-  if (pinCode.toString().trim() === "" || pinCode.toString().length !== 6) {
-    toast.error("Please enter a valid 6-digit pin code.");
+  if (pinCode.toString().trim() === "") {
+    toast.error("Please enter your pin code.");
     return;
   }
+
+  if (!/^[A-Za-z0-9\s-]+$/.test(pinCode.toString().trim())) {
+    toast.error("Pin code should only contain letters, numbers, spaces, or hyphens.");
+    return;
+  }
+  
 
   // If all validations pass, proceed to place the order
   try {
@@ -1113,6 +1120,18 @@ console.log("selected list",selectedList)
                           ))}
                         </div>
                       </SkeletonTheme>
+                      {/* <SkeletonTheme baseColor="#161616" highlightColor="#202020">
+                        <div className="justify-around  gap-2 m-2 grid grid-cols-2 xxs:hidden">
+                          {Array.from({ length: 10 }).map((_, index) => (
+                            <Skeleton
+                              key={index}
+                              count={1}
+                              width={150}
+                              height={250}
+                            />
+                          ))}
+                        </div>
+                      </SkeletonTheme> */}
                       
                       </div>
                   ):(
@@ -1137,7 +1156,7 @@ console.log("selected list",selectedList)
                     ))}
                   
                   </div> */}
-                  <div className='hidden w-[90%] min-h-[65vh] sm:flex flex-wrap mt-8 sm:mx-10 mb-8'>
+                  <div className='hidden w-[100%] min-h-[65vh] sm:flex  flex-wrap mt-8  mb-8'>
                     {selectedList && selectedList.length > 0 && selectedList.map((img, index) => (
                       <div className='w-full rounded-lg flip-card'>
                         {currentOption === "mycollection" ? (
@@ -1327,14 +1346,16 @@ console.log("selected list",selectedList)
               : "h-[30vh] w-[60vw] md:w-[40vw] md:h-[25vh] lg:w-[30vw] lg:h-[20vh] xl:h-[35vh] xl:w-[26vw]"
           }`}>
              
-                <div className="relative flex items-center justify-end">
-              <button
-                className="text-[#ffffff] absolute bottom-1 top-1"
-                onClick={() => {togglePlaceOrderPopup();resetFormFields()}}
-              >
-                <RxCross2 size={20} />
-              </button>
-            </div>
+                {!placeOrderLoading && (
+                  <div className="relative flex items-center justify-end">
+                  <button
+                    className="text-[#ffffff] absolute bottom-1 top-1"
+                    onClick={() => {togglePlaceOrderPopup();resetFormFields()}}
+                  >
+                    <RxCross2 size={20} />
+                  </button>
+                </div>
+                )}
              
             {currentOrderingStatus === buyingStatus.showCollection && (
               <div className="h-[90%]  flex flex-col items-center justify-center gap-2 mt-4">
@@ -1477,7 +1498,7 @@ console.log("selected list",selectedList)
                       <span className="absolute text-red-700 -top-1">*</span>
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       className="bg-transparent border-0 border-b border-white border-solid"
                       value={pinCode}
                       onChange={(e)=>updatePinCode(e.target.value)}

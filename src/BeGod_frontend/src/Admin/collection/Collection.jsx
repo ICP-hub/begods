@@ -7,12 +7,16 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { FaTrashAlt } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
+import { BiErrorCircle } from "react-icons/bi"; // Warning icon
 import { Principal } from "@dfinity/principal";
 
 function Collection() {
   const { backendActor } = useAuth();
   const [coll, setColl] = useState([]); // Initialize as an empty array
   const [loading, setLoading] = useState(false);
+  const [showDialog, setShowDialog] = useState(false); // Modal state
+  const [collectionToDelete, setCollectionToDelete] = useState(null); // Track the collection to delete
 
   const getCollection = async () => {
     setLoading(true);
@@ -24,9 +28,7 @@ function Collection() {
         if (result && Array.isArray(result)) {
           result.forEach((item) => {
             if (item && item.length > 1) {
-              // console.log(item);
               item[1].forEach((value) => {
-                // console.log(value);
                 if (value && value.length > 1) {
                   tempArray.push(value);
                 }
@@ -37,7 +39,6 @@ function Collection() {
           console.log(tempArray);
           setColl(tempArray);
         }
-        // setColl(result.ok.data);
       } catch (error) {
         console.error("Error fetching collections:", error);
       } finally {
@@ -55,37 +56,33 @@ function Collection() {
     fetchCollection();
   }, [backendActor]);
 
-  const deletecollection = async (id) => {
+  const handleDelete = (collectionId) => {
+    setCollectionToDelete(collectionId);
+    setShowDialog(true); // Open the modal
+  };
+
+  const cancelDelete = () => {
+    setCollectionToDelete(null);
+    setShowDialog(false); // Close the modal
+  };
+
+  const confirmDelete = async () => {
+    setShowDialog(false);
     setLoading(true);
-    console.log("deleted");
-    const principalString = Principal.fromUint8Array(id._arr);
+    const principalString = Principal.fromUint8Array(collectionToDelete._arr);
     if (backendActor) {
       try {
-        const result = await backendActor?.remove_collection_to_map(
-          principalString
-        );
+        const result = await backendActor?.removeCollection(principalString);
         console.log(result);
       } catch (error) {
-        console.error("Error fetching delete collections:", error);
+        console.error("Error deleting collection:", error);
       } finally {
-        setLoading(false); // Make sure to stop loading state
+        setLoading(false);
+        // Close the modal after deletion
         await getCollection();
       }
     }
   };
-
-  // const demoCollections = [
-  //   [
-  //     1,
-  //     "Demo Description 1",
-  //     "Collection 1",
-  //     "https://via.placeholder.com/150",
-  //   ],
-  // ];
-
-  // Replace `coll` with demoCollections when testing
-  // const coll = demoCollections;
-  // const loading = false; // Set loading to false to render demo data
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
@@ -109,7 +106,7 @@ function Collection() {
         {/* Loader skeleton when loading */}
         {loading ? (
           <div className="grid w-full gap-6 lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
-            {Array(6) // Generate skeleton loaders for each collection card
+            {Array(6)
               .fill()
               .map((_, index) => (
                 <div
@@ -123,7 +120,7 @@ function Collection() {
               ))}
           </div>
         ) : (
-          <div className="w-full  flex justify-center items-center">
+          <div className="w-full flex justify-center items-center">
             {/* Grid of collections */}
             {coll.length > 0 ? (
               <div className="grid w-full gap-6 lg:grid-cols-3 sm:grid-cols-1 md:grid-cols-2">
@@ -142,7 +139,7 @@ function Collection() {
                           className="text-white hover:text-red-600 transition-colors duration-300"
                           onClick={(e) => {
                             e.preventDefault();
-                            deletecollection(collectiondata[1]);
+                            handleDelete(collectiondata[1]);
                           }}
                         >
                           <FaTrashAlt className="w-6 h-6" />
@@ -174,6 +171,50 @@ function Collection() {
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      {showDialog && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm z-50">
+          <div className="relative bg-[#29292C] p-8 px-10 rounded-md text-center text-white w-full sm:w-[90%] md:w-[500px] shadow-lg">
+            {/* Close Button */}
+            <button
+              className="absolute top-4 right-4 text-white hover:text-gray-400 text-2xl"
+              onClick={cancelDelete}
+            >
+              <IoClose />
+            </button>
+            {/* Warning Icon and Text */}
+            <div className="flex flex-col items-center">
+              <BiErrorCircle className="text-yellow-500 text-6xl mb-4" />
+              <p className="text-lg font-semibold mb-4">
+                Warning! This action cannot be undone.
+              </p>
+              <p className="mb-6">
+                Are you sure you want to delete this collection?
+              </p>
+            </div>
+            {/* Buttons */}
+            <div className="flex justify-between space-x-2">
+              <button
+                className="w-full px-6 py-3 bg-gray-600 rounded-md text-white text-lg hover:bg-gray-700"
+                onClick={(e) => {
+                  cancelDelete();
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                className="w-full px-6 py-3 bg-[#FCD37B] rounded-md text-black text-lg hover:bg-yellow-500"
+                onClick={(e) => {
+                  confirmDelete();
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </SkeletonTheme>
   );
 }

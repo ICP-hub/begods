@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import YellowButton from "../../components/button/YellowButton";
 import imageCompression from "browser-image-compression";
 import { v4 as uuidv4 } from "uuid";
+import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler";
+
 const Modal = (props) => {
   const {
     getAddedNftDetails,
@@ -56,43 +58,36 @@ const Modal = (props) => {
 
   const [nftFullImageURL, setNftFullImageURL] = useState("");
 
-  const [hideImageUpload, updateHideImageUploadStatus] = useState(true);
+  const [hideImageUpload, updateHideImageUploadStatus] = useState(false);
 
-  const [hideFullImageUpload,updateHideFullImageUpload] = useState(true);
+  const [imageurl1, setimageurl1] = useState("");
+  const [imageurl2, setimageurl2] = useState("");
+  const [imageurl3, setimageurl3] = useState("");
+  const [imageurl4, setimageurl4] = useState("");
 
-  // const [nftName, setNftName] = useState("");
-  // const [nftType, setNftType] = useState("Common");
-  // const [nftQuantity, setNftQuantity] = useState();
-  // const [nftPrice, setPrice] = useState();
-  // const [nftDescription, setNftDescription] = useState("");
-  // const [nftImage, setNftImage] = useState();
-  // const [nftImageURL, setNftImageURL] = useState("");
-  // const [nftcolor, setnftcolor] = useState("Golden");
-
-  // const nnftid = () => {
-  //   const value = Math.floor(Math.random() * 1000000);
-  //   setNftId(value);
-  // };
-
-  // useEffect(() => {
-  //   nnftid();
-  // }, []);
+  console.log(imageurl1);
 
   const onClickAddButton = () => {
     // event.preventDefault();
-    if (
+    if (nftPrice == 0) {
+      toast.error("Enter the price greater than 0");
+    } else if (
       nftName &&
       nftType &&
       nftQuantity &&
-      nftPrice &&
+      nftPrice != 0 &&
       nftDescription &&
       nftImage &&
       nftImageURL &&
       nftcolor &&
-      arstistname &&
+      // arstistname &&
       newtype &&
       nftSeason &&
-      nftFullImage
+      nftFullImage &&
+      imageurl1 &&
+      imageurl2 &&
+      imageurl3 &&
+      imageurl4
     ) {
       const nftDetails = {
         nftId: uuidv4(),
@@ -108,6 +103,10 @@ const Modal = (props) => {
         newtype,
         nftSeason,
         nftFullImage,
+        imageurl1,
+        imageurl2,
+        imageurl3,
+        imageurl4,
       };
       console.log("nft details", nftDetails);
       getAddedNftDetails(nftDetails);
@@ -119,7 +118,9 @@ const Modal = (props) => {
   };
   const onClickSaveButton = () => {
     // event.preventDefault();
-    if (
+    if (nftPrice == 0) {
+      toast.error("Enter the price greater than 0");
+    } else if (
       nftName &&
       nftType &&
       nftQuantity &&
@@ -128,10 +129,14 @@ const Modal = (props) => {
       nftImage &&
       nftImageURL &&
       nftcolor &&
-      arstistname &&
+      // arstistname &&
       newtype &&
       nftSeason &&
-      nftFullImage
+      nftFullImage &&
+      imageurl1 &&
+      imageurl2 &&
+      imageurl3 &&
+      imageurl4
     ) {
       const nftDetails = {
         nftId: cardDetails.nftId,
@@ -147,6 +152,10 @@ const Modal = (props) => {
         newtype,
         nftSeason,
         nftFullImage,
+        imageurl1,
+        imageurl2,
+        imageurl3,
+        imageurl4,
       };
       console.log("nft details", nftDetails);
       getUpdatedNftDetails(nftDetails);
@@ -221,6 +230,9 @@ const Modal = (props) => {
     setNftFullImageURL(pic);
     console.log(nftFullImageURL);
     // console.log("img", files);
+  };
+  const value = (files) => {
+    console.group("image 3 and 4 called");
   };
   // console.log(nftFullImage, nftFullImageURL);
 
@@ -333,6 +345,9 @@ const Modal = (props) => {
               <option value="Asset" className="text-[16px] text-[#8a8686]">
                 Asset
               </option>
+              <option value="Asset" className="text-[16px] text-[#8a8686]">
+                Booster
+              </option>
             </select>
           </label>
 
@@ -353,6 +368,7 @@ const Modal = (props) => {
               type="number"
               min="1"
               pattern="[1-9][0-9]*"
+              placeholder="Enter the quantity"
               className="pl-4 rounded-md h-[38px] p-2 bg-[#29292C] text-[16px] text-[#8a8686]"
             />
           </label>
@@ -360,11 +376,12 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Image
-            {type === "add" || !hideImageUpload ? (
+            HD Image
+            {type === "add" || hideImageUpload ? (
               <ImageUploader
                 captureUploadedNftImage={captureUploadedNftImage}
                 captureUploadedNftImageFile={captureUploadedNftImageFile}
+                imageurlchange={setimageurl1}
               />
             ) : (
               <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
@@ -386,11 +403,44 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Full Image
-            {type === "add" || nftFullImage === "" || !hideFullImageUpload ? (
-              <ImageUploader
+            Full HD Image
+            <ImageUploader
               captureUploadedNftImage={captureUploadedNftFullImage}
               captureUploadedNftImageFile={captureUploadedNftFullImageFile}
+              imageurlchange={setimageurl2}
+            />
+          </label>
+        </div>
+
+        <div className="mt-1">
+          <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+            Full SD Image
+            <ImageUploader
+              captureUploadedNftImage={value}
+              captureUploadedNftImageFile={value}
+              imageurlchange={setimageurl3}
+            />
+          </label>
+        </div>
+
+        <div className="mt-1">
+          <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+            SD Image
+            <ImageUploader
+              captureUploadedNftImage={value}
+              captureUploadedNftImageFile={value}
+              imageurlchange={setimageurl4}
+            />
+          </label>
+        </div>
+
+        <div className="mt-1">
+          <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+            SD Image
+            <ImageUploader
+              captureUploadedNftImage={value}
+              captureUploadedNftImageFile={value}
+              imageurlchange={setimageurl4}
             />
             ):(
               <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
