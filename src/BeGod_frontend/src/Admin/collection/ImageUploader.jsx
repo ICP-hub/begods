@@ -1,19 +1,21 @@
 import { useEffect, useState } from "react";
 import { RiFolder6Line, RiDeleteBinLine } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
+import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler";
 
 function ImageUploader(props) {
   const [files, setFiles] = useState();
   const [previews, setPreviews] = useState();
   const [hideUpload, setHideUpload] = useState(false);
   const [fileType, setFileType] = useState("file");
-  const { captureUploadedNftImage, captureUploadedNftImageFile, capturefile } =
-    props;
+  const {
+    captureUploadedNftImage,
+    captureUploadedNftImageFile,
+    imageurlchange,
+  } = props;
 
-  // Rendering previews and sending both files and previews to parent
   useEffect(() => {
     if (!files || files.length === 0) return;
-
     // Create preview URLs for each file
     const objectUrls = Array.from(files).map((file) =>
       URL.createObjectURL(file)
@@ -21,6 +23,7 @@ function ImageUploader(props) {
     setPreviews(objectUrls);
     captureUploadedNftImageFile(files);
 
+    UploadedNftImage(objectUrls);
     // Cleanup function to revoke object URLs and free memory
     return () => {
       objectUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -47,13 +50,38 @@ function ImageUploader(props) {
     setFiles();
   };
 
+  const UploadedNftImage = async (captureImage) => {
+    if (BeGod_assethandler) {
+      try {
+        console.log(captureImage);
+
+        const id = Date.now().toString();
+        const response = await fetch(captureImage);
+        const blob = await response.blob();
+
+        const arrayBuffer = await blob.arrayBuffer();
+
+        const result1 = await BeGod_assethandler?.uploadImg(id, [
+          ...new Uint8Array(arrayBuffer),
+        ]);
+        console.log(result1);
+        const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+
+        //return the url
+        console.log("nft url", url);
+        imageurlchange(url);
+      } catch (error) {
+        console.error("Error fetching uploading:", error);
+      }
+    }
+  };
+
   return (
     <div className="mt-1">
       {!hideUpload && (
         <input
           type={fileType}
           accept="image/jpg, image/jpeg, image/png"
-          multiple
           onChange={(e) => {
             if (e.target.files && e.target.files.length > 0) {
               setFiles(e.target.files);

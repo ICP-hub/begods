@@ -59,6 +59,7 @@ const CreateCollection = () => {
   const [Success, setsuccess] = useState(false);
   const [done, setDone] = useState(0);
   const [totalnft, settotalnft] = useState();
+  const [collectionImageURL, setcollectionImageURL] = useState("");
 
   const { user } = useSelector((state) => state.auth);
   const principal_id = user;
@@ -122,7 +123,7 @@ const CreateCollection = () => {
   };
 
   const handleFiles = async (files) => {
-    // console.log("Uploaded files:", files);
+    console.log("Uploaded files:", files);
     setUFile(files);
 
     const file = files[0]; // Get the first uploaded file
@@ -158,7 +159,11 @@ const CreateCollection = () => {
     let n = nftCardsList.length;
     settotalnft(n);
     try {
-      const metadata = JSON.stringify({ description, collColor });
+      const metadata = JSON.stringify({
+        description,
+        collColor,
+        collectionImageURL,
+      });
       console.log(name, metadata, "calling collection creation");
       const report = await backendActor?.createExtCollection(
         name,
@@ -200,7 +205,11 @@ const CreateCollection = () => {
     arstistname,
     newtype,
     nftSeason,
-    nftFullImage
+    nftFullImage,
+    imageurl1,
+    imageurl2,
+    imageurl3,
+    imageurl4
   ) => {
     try {
       console.log("in mint", answ);
@@ -218,7 +227,11 @@ const CreateCollection = () => {
         arstistname,
         newtype,
         nftSeason,
-        nftFullImage,
+        // nftFullImage,
+        imageurl1,
+        imageurl2,
+        imageurl3,
+        imageurl4,
       });
 
       const metadataContainer = {
@@ -391,7 +404,11 @@ const CreateCollection = () => {
               val.arstistname,
               val.newtype,
               val.nftSeason,
-              val.nftFullImage
+              val.nftFullImage,
+              val.imageurl1,
+              val.imageurl2,
+              val.imageurl3,
+              val.imageurl4
             );
             console.log(mintResult, "mintResult");
             if (mintResult instanceof Error) {
@@ -535,7 +552,10 @@ const CreateCollection = () => {
                         <span className="text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px] mb-2">
                           Logo
                         </span>
-                        <LogoImageUploader captureUploadedFiles={handleFiles} />
+                        <LogoImageUploader
+                          captureUploadedFiles={handleFiles}
+                          captureuploadedurl={setcollectionImageURL}
+                        />
                       </label>
                     </div>
                   </div>
