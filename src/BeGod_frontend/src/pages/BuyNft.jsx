@@ -228,9 +228,11 @@ const BuyNft = () => {
     };
 
     const cardDetails = result[0][2].nonfungible;
-    // const metadata = JSON.parse(cardDetails.metadata[0].json);
+    console.log("card details",cardDetails.metadata)
+   const metadata = JSON.parse(cardDetails.metadata[0].json);
+  
     const cardPrice = parseInt(result[0][3]);
-    let date,artist,type,season,fullImg;
+    let date,artist,type,season,img,fullImg;
     cardDetails?.metadata.forEach((item) => {
       const parsedData = JSON.parse(item.json);
       console.log(parsedData);
@@ -241,13 +243,17 @@ const BuyNft = () => {
       artist = parsedData.arstistname;
       type = parsedData.newtype;
       season = parsedData.nftSeason;
-      fullImg = parsedData.nftFullImage;
+      fullImg = parsedData.imageurl2;
+      img = parsedData.imageurl2;
     });
+    if (artist === ""){
+      artist = "N/A"
+    }
 console.log("full img",fullImg)
     const updatedCardDetails = {
       cardName: cardDetails?.name,
       cardType: parsedMetadata?.nftTypes,
-      cardImageUrl: cardDetails?.thumbnail,
+      cardImageUrl: img,
       cardDescription: cardDetails?.description,
       cardPrice: cardPrice,
       standards: parsedMetadata.standards,
@@ -732,14 +738,16 @@ console.log("full img",fullImg)
               <div
                 className={`w-[90vw]  md:w-[60vw]   lg:w-[55vw] xl:w-[30vw] ] bg-[#111] text-white font-caslon p-5 pb-10 rounded-md  drop-shadow-lg`}
               >
-                <div className=" flex items-center justify-end">
-                  <button
-                    className="text-[#ffffff]   z-10"
-                    onClick={() => toggleBuyPopup()}
-                  >
-                    <RxCross2 size={20} />
-                  </button>
-                </div>
+                  {currentBuyingStatus === buyingStatus.success && (
+                    <div className=" flex items-center justify-end">
+                    <button
+                      className="text-[#ffffff]   z-10"
+                      onClick={() => toggleBuyPopup()}
+                    >
+                      <RxCross2 size={20} />
+                    </button>
+                  </div>
+                  )}
                   {
                     (showError.show) && (
                     <div className=" flex flex-col items-center justify-center">
@@ -751,7 +759,7 @@ console.log("full img",fullImg)
                
 
                 {!showError.show && currentBuyingStatus === buyingStatus.payment && (
-                  <div className="flex flex-col items-center justify-center">
+                  <div className="h-100% flex flex-col items-center justify-center pt-5  ">
                     <div className="flex items-center w-[90%]">
                       {popUpFirstLoading ? (
                         <div className="relative flex items-center justify-center ">
