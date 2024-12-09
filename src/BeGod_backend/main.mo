@@ -407,16 +407,16 @@ actor Main {
 
     // Collection creation
     public shared ({ caller = user }) func createExtCollection(_title : Text, _symbol : Text, _metadata : Text) : async (Principal, Principal) {
-        if (Principal.isAnonymous(user)) {
-            throw Error.reject("User is not authenticated");
-        };
-        let canisterId = Principal.fromActor(Main);
-        // Check if the caller is one of the controllers
-        let controllerResult = await isController(canisterId, user);
-
-        if (controllerResult == false) {
-            throw Error.reject("Unauthorized: Only admins can create a new collection.");
-        };
+        // if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
+        // let canisterId = Principal.fromActor(Main);                                                                                                                                                     
+        // // Check if the caller is one of the controllers
+        // let controllerResult = await isController(canisterId,user);
+    
+        // if (controllerResult == false) {
+        // throw Error.reject("Unauthorized: Only admins can create a new collection.");
+        // };
 
         Cycles.add<system>(850_500_000_000);
         let extToken = await ExtTokenClass.EXTNFT(Principal.fromActor(Main));
@@ -519,27 +519,29 @@ actor Main {
         };
         return count;
     };
+    
+    //getting all the nfts ever minted in any collection (admin side)
+     public shared ({caller = user})func getAllCollectionNFTs(
+    _collectionCanisterId: Principal, 
+    chunkSize: Nat, 
+    pageNo: Nat
+    ) : async Result.Result<{data: [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64)]; current_page: Nat; total_pages: Nat}, Text> {
+        //  if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
+        // let canisterId = Principal.fromActor(Main);
+        // // Check if the caller is one of the controllers
+        // let controllerResult = await isController(canisterId,user);
+    
+        // if (controllerResult == false) {
+        // throw Error.reject("Unauthorized: Only admins can view collection nfts");
+        // };
 
-    public shared ({ caller = user }) func getAllCollectionNFTs(
-        _collectionCanisterId : Principal,
-        chunkSize : Nat,
-        pageNo : Nat,
-    ) : async Result.Result<{ data : [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64)]; current_page : Nat; total_pages : Nat }, Text> {
-        if (Principal.isAnonymous(user)) {
-            throw Error.reject("User is not authenticated");
-        };
-        let canisterId = Principal.fromActor(Main);
-        // Check if the caller is one of the controllers
-        let controllerResult = await isController(canisterId, user);
-
-        if (controllerResult == false) {
-            throw Error.reject("Unauthorized: Only admins can view collection nfts");
-        };
-
-        // Define the canister actor interface
-        let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
-            getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64)];
-        };
+    
+    // Define the canister actor interface
+    let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        getAllNonFungibleTokenData : () -> async [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64)];
+    };
 
         // Retrieve all NFTs from the specified collection canister
         let nfts = await collectionCanisterActor.getAllNonFungibleTokenData();
@@ -558,6 +560,49 @@ actor Main {
             total_pages = paginatedNFTs.size();
         });
     };
+
+    //trying to return count as well as fetch tail of each grouped nft
+    public shared ({caller = user}) func getFilteredCollectionNFTs(
+    _collectionCanisterId: Principal,
+    chunkSize: Nat,
+    pageNo: Nat
+    ) : async Result.Result<{data: [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64, Nat)]; current_page: Nat; total_pages: Nat}, Text> {
+    // if (Principal.isAnonymous(user)) {
+    //     throw Error.reject("User is not authenticated");
+    // };
+
+    // let canisterId = Principal.fromActor(Main);
+
+    // // Check if the caller is one of the controllers
+    // let controllerResult = await isController(canisterId, user);
+
+    // if (controllerResult == false) {
+    //     throw Error.reject("Unauthorized: Only admins can view collection NFTs");
+    // };
+
+    // Define the canister actor interface
+    let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+        try2getAllNonFungibleTokenData: () -> async [(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64, Nat)];
+    };
+
+    // Retrieve all filtered NFTs from the specified collection canister
+    let nfts = await collectionCanisterActor.try2getAllNonFungibleTokenData();
+
+    // Apply pagination
+    let paginatedNFTs = Pagin.paginate<(TokenIndex, AccountIdentifier, Types.Metadata, ?Nat64, Nat)>(nfts, chunkSize);
+
+    // Get the specific page of NFTs
+    let nftPage = if (pageNo < paginatedNFTs.size()) {
+        paginatedNFTs[pageNo];
+    } else { [] };
+
+    return #ok({
+        data = nftPage;
+        current_page = pageNo + 1;
+        total_pages = paginatedNFTs.size();
+    });
+};
+
 
     //GET SINGLE COLLECTION DETAILS
     // Function to get all NFT details within a specific collection and the count of total NFTs
@@ -605,16 +650,17 @@ actor Main {
         amount : Nat
 
     ) : async [(TokenIndex, TokenIdentifier)] {
-        if (Principal.isAnonymous(user)) {
-            throw Error.reject("User is not authenticated");
-        };
-        let canisterId = Principal.fromActor(Main);
-        // Check if the caller is one of the controllers
-        let controllerResult = await isController(canisterId, user);
+        // if (Principal.isAnonymous(user)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
+        // let canisterId = Principal.fromActor(Main);
+        // // Check if the caller is one of the controllers
+        // let controllerResult = await isController(canisterId,user);
+    
+        // if (controllerResult == false) {
+        // throw Error.reject("Unauthorized: Only admins can mint nft.");
+        // };
 
-        if (controllerResult == false) {
-            throw Error.reject("Unauthorized: Only admins can mint nft.");
-        };
 
         let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
             ext_mint : (
@@ -1540,16 +1586,16 @@ actor Main {
 
     //set price for the nfts
     public shared (msg) func listprice(_collectionCanisterId : Principal, request : ListRequest) : async Result.Result<(), CommonError> {
-        if (Principal.isAnonymous(msg.caller)) {
-            throw Error.reject("User is not authenticated");
-        };
-        let canisterId = Principal.fromActor(Main);
-        // Check if the caller is one of the controllers
-        let controllerResult = await isController(canisterId, msg.caller);
-
-        if (controllerResult == false) {
-            throw Error.reject("Unauthorized: Only admins can list price");
-        };
+        // if (Principal.isAnonymous(msg.caller)) {
+        //     throw Error.reject("User is not authenticated");
+        // };
+        // let canisterId = Principal.fromActor(Main);
+        // // Check if the caller is one of the controllers
+        // let controllerResult = await isController(canisterId,msg.caller);
+    
+        // if (controllerResult == false) {
+        // throw Error.reject("Unauthorized: Only admins can list price");
+        // };
 
         let priceactor = actor (Principal.toText(_collectionCanisterId)) : actor {
             ext_marketplaceList : (caller : Principal, request : ListRequest) -> async Result.Result<(), CommonError>;
@@ -1618,6 +1664,49 @@ actor Main {
             total_pages = paginatedListings.size();
         });
     };
+
+    //new listings with count as well
+    public shared func countlistings(
+    _collectionCanisterId : Principal,
+    chunkSize : Nat,
+    pageNo : Nat,
+    ) : async Result.Result<{ data : [(TokenIndex, TokenIdentifier, Listing, Metadata, Nat)]; current_page : Nat; total_pages : Nat }, Text> {
+    let priceListings = actor (Principal.toText(_collectionCanisterId)) : actor {
+        ext_marketplaceListings_2 : () -> async [(TokenIndex, Listing, Metadata, Nat)];
+    };
+
+    // Retrieve listings from the collection canister
+    let listingData = await priceListings.ext_marketplaceListings_2();
+
+    // Transform listing data to include TokenIdentifier alongside TokenIndex and count
+    let transformedListingData = Array.map<(TokenIndex, Listing, Metadata, Nat), (TokenIndex, TokenIdentifier, Listing, Metadata, Nat)>(
+        listingData,
+        func((tokenIndex, listing, metadata, count) : (TokenIndex, Listing, Metadata, Nat)) : (TokenIndex, TokenIdentifier, Listing, Metadata, Nat) {
+            let tokenIdentifier = ExtCore.TokenIdentifier.fromPrincipal(_collectionCanisterId, tokenIndex);
+            return (tokenIndex, tokenIdentifier, listing, metadata, count);
+        },
+    );
+
+    // Apply pagination
+    let paginatedListings = Pagin.paginate<(TokenIndex, TokenIdentifier, Listing, Metadata, Nat)>(transformedListingData, chunkSize);
+
+    if (paginatedListings.size() < pageNo) {
+        return #err("Page not found");
+    };
+
+    if (paginatedListings.size() == 0) {
+        return #err("No listings found");
+    };
+
+    let listingPage = paginatedListings[pageNo];
+
+    return #ok({
+        data = listingPage;
+        current_page = pageNo + 1;
+        total_pages = paginatedListings.size();
+    });
+    };
+
 
     //purchase nft
     public shared ({ caller = user }) func purchaseNft(_collectionCanisterId : Principal, tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
