@@ -62,11 +62,25 @@ function LogoImageUploader({ captureUploadedFiles, captureuploadedurl }) {
           ...new Uint8Array(arrayBuffer),
         ]);
         console.log(result1);
-        const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
 
-        //return the url
-        console.log("nft url", url);
-        captureuploadedurl(url);
+        // //return the url
+        const acd = process.env.DFX_NETWORK;
+        console.log(acd);
+        if (acd == "local") {
+          const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+          console.log("nft url", url);
+          captureuploadedurl(url);
+        } else if (acd === "ic") {
+          const url = `http://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.icp0.io/?&imgid=${id}`;
+          console.log("nft url", url);
+          captureuploadedurl(url);
+        }
+
+        // const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+
+        // //return the url
+        // console.log("nft url", url);
+        // captureuploadedurl(url);
         // setimageurl(url);
         // imageurlchange(url);
         // console.log(imageurl);
