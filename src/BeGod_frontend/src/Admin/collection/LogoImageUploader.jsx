@@ -64,8 +64,7 @@ function LogoImageUploader({ captureUploadedFiles, captureuploadedurl }) {
         console.log(result1);
 
         // //return the url
-        const acd = "ic";
-        //  process.env.DFX_NETWORK;
+        const acd = process.env.DFX_NETWORK;
         console.log(acd);
         if (acd == "local") {
           const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
