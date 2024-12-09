@@ -623,6 +623,7 @@ const currentPage  = useRef(1);
 
           console.log("card details",cardDetails)
           const metadata = JSON.parse(cardDetails.metadata[0].json);
+          console.log("metadata",metadata)
           let isFav = false;
           if(isOwned){
            isFav = await checkIsFavourite(eachCard[0]);
@@ -634,7 +635,7 @@ const currentPage  = useRef(1);
                 index : eachCard[1],
                 collectionId,
                 cardName:cardDetails.name,
-                cardImageUrl:cardDetails.thumbnail,
+                cardImageUrl:metadata.imageurl2,
                 cardType:metadata.nftType,
                 isOwned,
                 isFavourite : isFav,

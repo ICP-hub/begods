@@ -324,11 +324,12 @@ const fetchCollectionNfts = async (collectionId,color) => {
 const getCollectionNfts = (collectionList, collectionId, color) => {
     return collectionList.map((eachItem) => {
       const { nonfungible } = eachItem[3];
-      const { thumbnail: image, name } = nonfungible;
+      const { thumbnail, name } = nonfungible;
       const sold = eachItem[2].price;
       const ICP = parseInt(sold) / 100000000;
       const metadata = JSON.parse(nonfungible.metadata[0].json);
-      const { nftType, nftcolor: borderColor } = metadata;
+      console.log("metadata",metadata);
+      const { nftType, nftcolor: borderColor ,imageurl2:image } = metadata;
   
       const nftCard = {
         collectionId,

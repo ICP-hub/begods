@@ -228,9 +228,11 @@ const BuyNft = () => {
     };
 
     const cardDetails = result[0][2].nonfungible;
-    // const metadata = JSON.parse(cardDetails.metadata[0].json);
+    console.log("card details",cardDetails.metadata)
+   const metadata = JSON.parse(cardDetails.metadata[0].json);
+  
     const cardPrice = parseInt(result[0][3]);
-    let date,artist,type,season,fullImg;
+    let date,artist,type,season,img,fullImg;
     cardDetails?.metadata.forEach((item) => {
       const parsedData = JSON.parse(item.json);
       console.log(parsedData);
@@ -241,13 +243,17 @@ const BuyNft = () => {
       artist = parsedData.arstistname;
       type = parsedData.newtype;
       season = parsedData.nftSeason;
-      fullImg = parsedData.nftFullImage;
+      fullImg = parsedData.imageurl2;
+      img = parsedData.imageurl2;
     });
+    if (artist === ""){
+      artist = "N/A"
+    }
 console.log("full img",fullImg)
     const updatedCardDetails = {
       cardName: cardDetails?.name,
       cardType: parsedMetadata?.nftTypes,
-      cardImageUrl: cardDetails?.thumbnail,
+      cardImageUrl: img,
       cardDescription: cardDetails?.description,
       cardPrice: cardPrice,
       standards: parsedMetadata.standards,

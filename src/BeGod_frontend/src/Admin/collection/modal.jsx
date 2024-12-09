@@ -56,6 +56,9 @@ const Modal = (props) => {
     type === "edit" ? cardDetails.nftFullImage : ""
   )
 
+
+  
+
   const [nftFullImageURL, setNftFullImageURL] = useState("");
 
   const [hideImageUpload, updateHideImageUploadStatus] = useState(false);
@@ -433,33 +436,6 @@ const Modal = (props) => {
             />
           </label>
         </div>
-
-        <div className="mt-1">
-          <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            SD Image
-            <ImageUploader
-              captureUploadedNftImage={value}
-              captureUploadedNftImageFile={value}
-              imageurlchange={setimageurl4}
-            />
-            ):(
-              <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
-                <img
-                  src={nftFullImage}
-                  alt="Selected"
-                  className="object-cover w-full h-full rounded-lg"
-                />
-                <button
-                  onClick={() => updateHideFullImageUpload(false)}
-                  className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
-                >
-                  <RxCross2 className="text-black" size={15} />
-                </button>
-              </div>
-            )}
-          </label>
-        </div>
-
         <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-full h-[120px] md:h-[60px] mb-0">
           <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
             NFT Season:
