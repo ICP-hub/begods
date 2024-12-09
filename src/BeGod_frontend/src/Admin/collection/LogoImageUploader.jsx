@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { RiFolder6Line, RiDeleteBinLine } from "react-icons/ri";
 import { RxCross2 } from "react-icons/rx";
 import Skeleton from "react-loading-skeleton";
+import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler";
 
-function LogoImageUploader({ captureUploadedFiles }) {
+function LogoImageUploader({ captureUploadedFiles, captureuploadedurl }) {
   const [files, setFiles] = useState();
   const [previews, setPreviews] = useState();
   const [hideUpload, setHideUpload] = useState(false);
@@ -19,6 +20,7 @@ function LogoImageUploader({ captureUploadedFiles }) {
     );
     setPreviews(objectUrls);
     setFileType("file");
+    UploadedNftImage(objectUrls);
     // Cleanup function to revoke all object URLs and free memory
     return () => {
       objectUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -40,7 +42,51 @@ function LogoImageUploader({ captureUploadedFiles }) {
 
     // Pass the selected files to the parent component or use them in this component
     if (captureUploadedFiles) {
-      captureUploadedFiles(selectedFiles); // This sends the file array to the parent
+      captureUploadedFiles(selectedFiles);
+    }
+  };
+
+  const UploadedNftImage = async (captureImage) => {
+    if (BeGod_assethandler) {
+      try {
+        console.log(captureImage);
+
+        const id = Date.now().toString();
+        const response = await fetch(captureImage);
+        const blob = await response.blob();
+
+        // Step 2: Convert Blob to ArrayBuffer
+        const arrayBuffer = await blob.arrayBuffer();
+
+        const result1 = await BeGod_assethandler?.uploadImg(id, [
+          ...new Uint8Array(arrayBuffer),
+        ]);
+        console.log(result1);
+
+        // //return the url
+        const acd = process.env.DFX_NETWORK;
+        console.log(acd);
+        if (acd == "local") {
+          const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+          console.log("nft url", url);
+          captureuploadedurl(url);
+        } else if (acd === "ic") {
+          const url = `http://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.icp0.io/?&imgid=${id}`;
+          console.log("nft url", url);
+          captureuploadedurl(url);
+        }
+
+        // const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+
+        // //return the url
+        // console.log("nft url", url);
+        // captureuploadedurl(url);
+        // setimageurl(url);
+        // imageurlchange(url);
+        // console.log(imageurl);
+      } catch (error) {
+        console.error("Error fetching uploadimg:", error);
+      }
     }
   };
 

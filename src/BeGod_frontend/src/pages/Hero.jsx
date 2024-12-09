@@ -149,6 +149,11 @@ const Hero = () => {
     const [inProgress,updateInProgressStatus] = useState(false);
 
     const handleCurrentIndex  = async(index) => {
+        const currentCollectionId = collections[index].collectionId;
+        const color = collections[index].shadowColor;
+        if(currentCollectionId === collections[currentIndex].collectionId) {
+            return;
+        }
         updateTotalPages(1);
         if(index >= visibleButtons-1 && index >= startIndex) {
             if(index != collections.length-1){
@@ -167,11 +172,7 @@ const Hero = () => {
         if(index )
         console.log("index in handle click",index)
         
-        const currentCollectionId = collections[index].collectionId;
-        const color = collections[index].shadowColor;
-        if(currentCollectionId === collections[currentIndex].collectionId) {
-            return;
-        }
+        
         updateNoCardsStatus(false);
         updateInProgressStatus(true);
         updateSelectedCollectionNftCardsList([]);
@@ -323,11 +324,12 @@ const fetchCollectionNfts = async (collectionId,color) => {
 const getCollectionNfts = (collectionList, collectionId, color) => {
     return collectionList.map((eachItem) => {
       const { nonfungible } = eachItem[3];
-      const { thumbnail: image, name } = nonfungible;
+      const { thumbnail, name } = nonfungible;
       const sold = eachItem[2].price;
       const ICP = parseInt(sold) / 100000000;
       const metadata = JSON.parse(nonfungible.metadata[0].json);
-      const { nftType, nftcolor: borderColor } = metadata;
+      console.log("metadata",metadata);
+      const { nftType, nftcolor: borderColor ,imageurl2:image } = metadata;
   
       const nftCard = {
         collectionId,

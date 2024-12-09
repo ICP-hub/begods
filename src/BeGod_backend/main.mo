@@ -175,7 +175,7 @@ actor Main {
         name : Text;
         email : Text;
         telegram : Text;
-        profilepic : ?Blob; 
+        profilepic : ?Blob;
     };
 
     //LEDGER
@@ -265,8 +265,8 @@ actor Main {
 
     public shared func fetchCycles() : async Nat {
         let balance = Cycles.balance();
-        Debug.print("Current cycle balance: " # Nat.toText(balance)); 
-        return balance; 
+        Debug.print("Current cycle balance: " # Nat.toText(balance));
+        return balance;
     };
 
     let IC = actor "aaaaa-aa" : actor {
@@ -301,10 +301,10 @@ actor Main {
         };
         let canisterId = Principal.fromActor(Main);
         // Check if the caller is one of the controllers
-        let controllerResult = await isController(canisterId,user);
-    
+        let controllerResult = await isController(canisterId, user);
+
         if (controllerResult == false) {
-        return ("Unauthorized: Only admins can add new collection");
+            return ("Unauthorized: Only admins can add new collection");
         };
 
         let userCollections = usersCollectionMap.get(user);
@@ -340,7 +340,7 @@ actor Main {
     //     let canisterId = Principal.fromActor(Main);
     //     // Check if the caller is one of the controllers
     //     let controllerResult = await isController(canisterId,user);
-    
+
     //     if (controllerResult == false) {
     //     return ("Unauthorized: Only admins can delete a collection.");
     //     };
@@ -363,43 +363,46 @@ actor Main {
     // };
 
     //remove collection created by any admin
-    public shared ({ caller = user }) func removeCollection(collection_id: Principal): async Text {
-    if (Principal.isAnonymous(user)) {
-        throw Error.reject("User is not authenticated");
-    };
-
-    let canisterId = Principal.fromActor(Main);
-
-    // Check if the caller is one of the controllers (admin check)
-    let controllerResult = await isController(canisterId, user);
-    if (controllerResult == false) {
-        return "Unauthorized: Only admins can delete a collection.";
-    };
-
-    var found = false;
-
-    // Iterate through all entries in usersCollectionMap
-    for ((userPrincipal, collections) in usersCollectionMap.entries()) {
-        var updatedCollections = List.filter<(Time.Time, Principal)>(List.fromArray(collections), func((_, collId)) {
-            if (collId == collection_id) {
-                found := true;
-                return false; // Exclude the target collection
-            };
-            return true;
-        });
-
-        // Update the map for this user if a collection was removed
-        if (found) {
-            usersCollectionMap.put(userPrincipal, List.toArray(updatedCollections));
+    public shared ({ caller = user }) func removeCollection(collection_id : Principal) : async Text {
+        if (Principal.isAnonymous(user)) {
+            throw Error.reject("User is not authenticated");
         };
-    };
 
-    // Return appropriate response based on whether the collection was found
-    if (found) {
-        return "Collection removed successfully.";
-    } else {
-        return "Collection not found.";
-    };
+        let canisterId = Principal.fromActor(Main);
+
+        // Check if the caller is one of the controllers (admin check)
+        let controllerResult = await isController(canisterId, user);
+        if (controllerResult == false) {
+            return "Unauthorized: Only admins can delete a collection.";
+        };
+
+        var found = false;
+
+        // Iterate through all entries in usersCollectionMap
+        for ((userPrincipal, collections) in usersCollectionMap.entries()) {
+            var updatedCollections = List.filter<(Time.Time, Principal)>(
+                List.fromArray(collections),
+                func((_, collId)) {
+                    if (collId == collection_id) {
+                        found := true;
+                        return false; // Exclude the target collection
+                    };
+                    return true;
+                },
+            );
+
+            // Update the map for this user if a collection was removed
+            if (found) {
+                usersCollectionMap.put(userPrincipal, List.toArray(updatedCollections));
+            };
+        };
+
+        // Return appropriate response based on whether the collection was found
+        if (found) {
+            return "Collection removed successfully.";
+        } else {
+            return "Collection not found.";
+        };
     };
 
     // Collection creation
@@ -802,12 +805,11 @@ actor Main {
         return totalNFTs; // Return the total number of NFTs across all collections
     };
 
-
     /* -------------------------------------------------------------------------- */
     /*                            User Related Methods                            */
     /* -------------------------------------------------------------------------- */
 
-    //create user 
+    //create user
     public shared ({ caller = user }) func create_user(accountIdentifier : Principal, uid : Text) : async Result.Result<(Nat, Time.Time), Text> {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
@@ -929,7 +931,7 @@ actor Main {
     public shared query ({ caller = user }) func getAllUsers(chunkSize : Nat, pageNo : Nat) : async Result.Result<{ data : [(Principal, Nat, Time.Time, Text, Text, ?Blob)]; current_page : Nat; total_pages : Nat }, Text> {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
-        }; 
+        };
         // Map over the usersArray and extract the relevant fields
         let allUsersDetails = Array.map<User, (Principal, Nat, Time.Time, Text, Text, ?Blob)>(
             usersArray,
@@ -989,21 +991,17 @@ actor Main {
         // };
         return usersArray.size();
     };
-    
+
     //usernftcollection (mycollection)
     public shared ({ caller = user }) func userNFTcollection(
-    _collectionCanisterId : Principal,
-    user : AccountIdentifier,
-    chunkSize: Nat,
-    pageNo: Nat,
-    ) : async Result.Result<{ 
-    boughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)]; 
-    unboughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] 
-    }, CommonError> {
-          if (Principal.isAnonymous(Principal.fromText(user))) {
+        _collectionCanisterId : Principal,
+        user : AccountIdentifier,
+        chunkSize : Nat,
+        pageNo : Nat,
+    ) : async Result.Result<{ boughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)]; unboughtNFTs : [(TokenIdentifier, TokenIndex, Metadata, Text, Principal, ?Nat64)] }, CommonError> {
+        if (Principal.isAnonymous(Principal.fromText(user))) {
             throw Error.reject("User is not authenticated");
         };
-
 
         // Define the canister actor interface
         let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
@@ -1098,20 +1096,20 @@ actor Main {
             unboughtNFTsPaginated[pageNo];
         } else { [] };
 
-    // Return paginated boughtNFTs and unboughtNFTs
-    return #ok({
-        boughtNFTs = boughtNFTsPage;
-        unboughtNFTs = unboughtNFTsPage;
-        current_page = pageNo + 1;
-        // total_pages = boughtNFTsPage.size();
-        // total_pages_unbought = unboughtNFTsPage.size();
-    });
-};
+        // Return paginated boughtNFTs and unboughtNFTs
+        return #ok({
+            boughtNFTs = boughtNFTsPage;
+            unboughtNFTs = unboughtNFTsPage;
+            current_page = pageNo + 1;
+            // total_pages = boughtNFTsPage.size();
+            // total_pages_unbought = unboughtNFTsPage.size();
+        });
+    };
 
     //User favorite NFTS from userNFTCollection
 
     // Function to add a token to the user's favorites
-    func _addToFavorites(user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : () {    
+    func _addToFavorites(user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : () {
 
         // Check if the user already has favorites
         let userFavorites = switch (_favorites.get(user)) {
@@ -1128,14 +1126,14 @@ actor Main {
 
     // ADD TO FAVORITES //
 
-    public shared ({caller = user})func addToFavorites(
+    public shared ({ caller = user }) func addToFavorites(
         user : AccountIdentifier,
         tokenIdentifier : TokenIdentifier,
     ) : async Result.Result<Text, CommonError> {
-          if (Principal.isAnonymous(Principal.fromText(user))) {
+        if (Principal.isAnonymous(Principal.fromText(user))) {
             throw Error.reject("User is not authenticated");
         };
-        
+
         // Check if the user already has favorites
         let userFavorites = switch (_favorites.get(user)) {
             case (?favorites) favorites; // If the user has favorites, retrieve them
@@ -1164,8 +1162,8 @@ actor Main {
 
     //REMOVE FROM FAVORITES //
     // Function to remove a token from the user's favorites
-    public shared({caller = user}) func removeFromFavorites(user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : async Result.Result<Text, CommonError> {
-          if (Principal.isAnonymous(Principal.fromText(user))) {
+    public shared ({ caller = user }) func removeFromFavorites(user : AccountIdentifier, tokenIdentifier : TokenIdentifier) : async Result.Result<Text, CommonError> {
+        if (Principal.isAnonymous(Principal.fromText(user))) {
             throw Error.reject("User is not authenticated");
         };
         // Check if the user already has favorites
@@ -1204,8 +1202,8 @@ actor Main {
 
     // GET USER FAVORITES //
     // Function to get the user's favorites
-    public shared query ({caller = user}) func getFavorites(user : AccountIdentifier) : async Result.Result<[(TokenIdentifier)], CommonError> {
-          if (Principal.isAnonymous(Principal.fromText(user))) {
+    public shared query ({ caller = user }) func getFavorites(user : AccountIdentifier) : async Result.Result<[(TokenIdentifier)], CommonError> {
+        if (Principal.isAnonymous(Principal.fromText(user))) {
             throw Error.reject("User is not authenticated");
         };
         // Check if the user has any favorites
@@ -1284,11 +1282,11 @@ actor Main {
         // return transformedTransactions;
     };
 
-    public shared ({caller = user}) func alluseractivity(buyerId : AccountIdentifier, chunkSize : Nat, pageNo : Nat) : async Result.Result<{data : [(TokenIndex, TokenIdentifier, Transaction, Text)]; current_page : Nat; total_pages : Nat}, Text> {
-    if (Principal.isAnonymous(user)) {
+    public shared ({ caller = user }) func alluseractivity(buyerId : AccountIdentifier, chunkSize : Nat, pageNo : Nat) : async Result.Result<{ data : [(TokenIndex, TokenIdentifier, Transaction, Text)]; current_page : Nat; total_pages : Nat }, Text> {
+        if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
         };
-    var allUserActivities : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
+        var allUserActivities : [(TokenIndex, TokenIdentifier, Transaction, Text)] = [];
 
         // Call getAllCollections to get all collections in the system
         let allCollections = await getAllCollections();
@@ -1346,7 +1344,7 @@ actor Main {
 
     //functions to get hard copy of cards
     // gethardcopy function
-    public shared ({caller = user}) func gethardcopy(
+    public shared ({ caller = user }) func gethardcopy(
         accountIdentifier : Principal,
         uuid : Text,
         collectionCanisterId : Principal, // Added collectionCanisterId parameter
@@ -1423,7 +1421,7 @@ actor Main {
     };
 
     //update existing order details
-public shared ({caller = user})func updateOrder(
+    public shared ({ caller = user }) func updateOrder(
         accountIdentifier : Principal,
         orderId : Nat,
         phone : Text,
@@ -1479,7 +1477,7 @@ public shared ({caller = user})func updateOrder(
     };
 
     //remove existing orders
-    public shared ({caller = user})func removeOrder(
+    public shared ({ caller = user }) func removeOrder(
         accountIdentifier : Principal,
         orderId : Nat,
     ) : async Result.Result<Text, Text> {
@@ -1510,7 +1508,7 @@ public shared ({caller = user})func updateOrder(
     };
 
     //get all orders of users (admin side)
-    public query ({caller = user})func getallOrders(chunkSize : Nat, pageNo : Nat) : async Result.Result<{ data : [Order]; current_page : Nat; total_pages : Nat }, Text> {
+    public query ({ caller = user }) func getallOrders(chunkSize : Nat, pageNo : Nat) : async Result.Result<{ data : [Order]; current_page : Nat; total_pages : Nat }, Text> {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
         };
@@ -1538,7 +1536,7 @@ public shared ({caller = user})func updateOrder(
     };
 
     // get order details for a specific order
-    public query({caller = user}) func orderDetails(
+    public query ({ caller = user }) func orderDetails(
         accountIdentifier : Principal,
         orderId : Nat,
     ) : async Result.Result<Order, Text> {
@@ -1564,9 +1562,8 @@ public shared ({caller = user})func updateOrder(
         };
     };
 
-
-     // Get all orders for a specific user based on their account identifier
-    public query ({caller = user }) func getuserorders(accountIdentifier : Principal) : async Result.Result<[Order], Text> {
+    // Get all orders for a specific user based on their account identifier
+    public query ({ caller = user }) func getuserorders(accountIdentifier : Principal) : async Result.Result<[Order], Text> {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
         };
@@ -1712,7 +1709,7 @@ public shared ({caller = user})func updateOrder(
 
 
     //purchase nft
-    public shared ({caller = user}) func purchaseNft(_collectionCanisterId : Principal, tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
+    public shared ({ caller = user }) func purchaseNft(_collectionCanisterId : Principal, tokenid : TokenIdentifier, price : Nat64, buyer : AccountIdentifier) : async Result.Result<(AccountIdentifier, Nat64), CommonError> {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
         };
@@ -1723,7 +1720,7 @@ public shared ({caller = user})func updateOrder(
     };
 
     //settle and confirm purchase
-    public shared ({caller = user})func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
+    public shared ({ caller = user }) func settlepurchase(_collectionCanisterId : Principal, paymentaddress : AccountIdentifier) : async Result.Result<(), CommonError> {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
         };
@@ -1754,18 +1751,18 @@ public shared ({caller = user})func updateOrder(
         return transformedTransactions;
     };
 
-    public shared(msg) func alltransactions(chunkSize : Nat, pageNo : Nat) : async Result.Result<{data : [(TokenIndex, TokenIdentifier, Transaction)]; current_page : Nat; total_pages : Nat}, Text> {
-    if (Principal.isAnonymous(msg.caller)) {
+    public shared (msg) func alltransactions(chunkSize : Nat, pageNo : Nat) : async Result.Result<{ data : [(TokenIndex, TokenIdentifier, Transaction)]; current_page : Nat; total_pages : Nat }, Text> {
+        if (Principal.isAnonymous(msg.caller)) {
             throw Error.reject("User is not authenticated");
         };
         let canisterId = Principal.fromActor(Main);
         // Check if the caller is one of the controllers
-        let controllerResult = await isController(canisterId,msg.caller);
-    
+        let controllerResult = await isController(canisterId, msg.caller);
+
         if (controllerResult == false) {
-        throw Error.reject("Unauthorized: Only admins can list price");
+            throw Error.reject("Unauthorized: Only admins can list price");
         };
-    var allTransactions : [(TokenIndex, TokenIdentifier, Transaction)] = [];
+        var allTransactions : [(TokenIndex, TokenIdentifier, Transaction)] = [];
 
         // Call getAllCollections to get all collections in the system
         let allCollections = await getAllCollections();
@@ -1871,7 +1868,7 @@ public shared ({caller = user})func updateOrder(
         };
     };
 
-    public shared ({ caller = user  }) func balance_settelment(_collectionCanisterId : Principal) : async () {
+    public shared ({ caller = user }) func balance_settelment(_collectionCanisterId : Principal) : async () {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
         };
@@ -1881,7 +1878,7 @@ public shared ({caller = user})func updateOrder(
         return await getResult.heartbeat_disbursements();
     };
 
-    public shared ({ caller = user}) func balance_nft_settelment(_collectionCanisterId : Principal) : async () {
+    public shared ({ caller = user }) func balance_nft_settelment(_collectionCanisterId : Principal) : async () {
         if (Principal.isAnonymous(user)) {
             throw Error.reject("User is not authenticated");
         };
