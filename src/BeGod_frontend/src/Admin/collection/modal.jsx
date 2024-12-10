@@ -165,9 +165,27 @@ const Modal = (props) => {
       toggleModal();
       toast.success("Card updated!");
     } else {
+      console.error("Missing NFT Card Details:");
+      if (!nftName) console.error("nftName is missing");
+      if (!nftType) console.error("nftType is missing");
+      if (!nftQuantity) console.error("nftQuantity is missing");
+      if (!nftPrice) console.error("nftPrice is missing");
+      if (!nftDescription) console.error("nftDescription is missing");
+      if (!nftImage) console.error("nftImage is missing");
+      if (!nftImageURL) console.error("nftImageURL is missing");
+      if (!nftcolor) console.error("nftcolor is missing");
+      if (!arstistname) console.error("arstistname is missing");
+      if (!newtype) console.error("newtype is missing");
+      if (!nftSeason) console.error("nftSeason is missing");
+      if (!nftFullImage) console.error("nftFullImage is missing");
+      if (!imageurl1) console.error("imageurl1 is missing");
+      if (!imageurl2) console.error("imageurl2 is missing");
+      if (!imageurl3) console.error("imageurl3 is missing");
+      if (!imageurl4) console.error("imageurl4 is missing");
       toast.error("Enter All NFT Card Details");
     }
   };
+  
 
   const captureUploadedNftImageFile = async (files) => {
     const file = files[0];
@@ -428,7 +446,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            SD Image
+            SD Image (optional)
             <ImageUploader
               captureUploadedNftImage={value}
               captureUploadedNftImageFile={value}

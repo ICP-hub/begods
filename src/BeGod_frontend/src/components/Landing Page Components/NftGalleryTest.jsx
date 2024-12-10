@@ -56,7 +56,7 @@ const NFTGallery = ({ currentCollection }) => {
     return () => window.removeEventListener('resize', updateImagesPerSet);
   }, []);
 
-  // console.log("current collection in nft gallery",currentCollection);
+   console.log("current collection in nft gallery",currentCollection);
   return (
     <div className='min-h-[70vh] md:min-h-[50vh] '>
       <div className='flex items-center ml-[2vw] mt-7 mr-[2vw] justify-between flex-wrap sm:hidden'>
@@ -83,6 +83,7 @@ const NFTGallery = ({ currentCollection }) => {
                   <h1 className="text-xl font-extrabold sm:text-3xl">{img.name}</h1>
                   <h2 className="mt-2 text-lg capitalize sm:text-xl">Type: {img.nftType}</h2>
                   <h2 className="mt-1 text-lg sm:text-xl">{img.ICP} ICP</h2>
+                  <h2 className="mt-1 text-lg sm:text-xl">Quantity: {img.quantity}</h2>
                   <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`} className="flex items-center justify-center mt-4 w-[60%] h-[30px] sm:w-[40%] sm:h-[32px] bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                     {t('buyNow')}
                   </Link>
@@ -117,6 +118,7 @@ const NFTGallery = ({ currentCollection }) => {
                 <h1 className="text-xl font-extrabold sm:text-3xl lg:text-2xl">{img.name}</h1>
                 <h2 className="mt-2 text-lg capitalize sm:text-xl">Type : {img.nftType}</h2>
                 <h2 className="mt-1 text-lg sm:text-xl">{img.ICP} ICP</h2>
+                <h2 className="mt-1 text-lg sm:text-xl">Quantity : {img.quantity}</h2>
                 <Link to={`/Nft/${img.name}/buy?collectionId=${img.collectionId}&type=${img.collectionColor}&index=${img.index}`} className="flex items-center justify-center mt-4 px-2 py-1 rounded-sm bg-blue-400 text-black border-3px border-gray-100 shadow-lg transform transition-transform hover:scale-105">
                   {t('buyNow')}
                 </Link>
