@@ -81,7 +81,7 @@ export default function HeroSlider() {
                     }`}
                   >
                     {!loaded[globalIndex] && (
-                      <div className="w-full h-full bg-gray-200 flex justify-center items-center">
+                      <div className="w-full h-full bg-gray-800 flex justify-center items-center">
                         <span>Loading...</span>
                       </div>
                     )}

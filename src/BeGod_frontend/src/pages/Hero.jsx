@@ -300,7 +300,8 @@ const onUpdateCurrentPage =async ()=>{
 const fetchCollectionNfts = async (collectionId,color) => {
 
    try{
-    const result = await backendActor?.plistings(collectionId,itemsPerPage,currentPage.current-1);
+    console.log("before")
+    const result = await backendActor?.countlistings(collectionId,itemsPerPage,currentPage.current-1);
       console.log("listings resut",result);
     index  = -1;
     const listedNfts = result?.ok?.data;
@@ -330,7 +331,11 @@ const getCollectionNfts = (collectionList, collectionId, color) => {
       const metadata = JSON.parse(nonfungible.metadata[0].json);
       console.log("metadata",metadata);
       const { nftType, nftcolor: borderColor ,imageurl2:image } = metadata;
-  
+
+     
+
+      const quantity = parseInt(eachItem[4]);
+      
       const nftCard = {
         collectionId,
         index: eachItem[0],
@@ -341,7 +346,9 @@ const getCollectionNfts = (collectionList, collectionId, color) => {
         nftType,
         borderColor,
         collectionColor: color,
+        quantity
       };
+      console.log("eachitem",nftCard)
     return nftCard
     });
   };
