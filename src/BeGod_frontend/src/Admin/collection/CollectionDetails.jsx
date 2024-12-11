@@ -195,14 +195,18 @@ function CollectionDetails() {
     principalStringg,
     nftname,
     nftdescription,
-    nftimage,
+    // nftimage,
     nftquantity,
     nftcolor,
     nftprice,
     nftType,
     artistname,
     newtype,
-    nftSeason
+    nftSeason,
+    imageurl1,
+    imageurl2,
+    imageurl3,
+    imageurl4
   ) => {
     try {
       // console.log("in mint", principalStringg);
@@ -221,6 +225,10 @@ function CollectionDetails() {
         artistname,
         newtype,
         nftSeason,
+        imageurl1,
+        imageurl2,
+        imageurl3,
+        imageurl4,
       });
 
       const metadataContainer = {
@@ -232,7 +240,7 @@ function CollectionDetails() {
         nftname,
         nftdescription,
         "thumbnail",
-        nftimage,
+        "nftimage",
         metadataContainer ? [metadataContainer] : [],
         Number(nftquantity)
       );
@@ -299,29 +307,29 @@ function CollectionDetails() {
     }
   };
 
-  const getListing = async (principal) => {
-    try {
-      // console.log(principal);
-      const principalString = Principal.fromUint8Array(principal._arr);
-      // toast("Featching NFTs,Please Wait! ...", {
-      //   icon: "⚠️",
-      //   style: {
-      //     borderRadius: "10px",
-      //     background: "#333",
-      //     color: "#fff",
-      //   },
-      // });
-      const result = await backendActor?.listings(principalString);
-      console.log("Listing", result);
+  // const getListing = async (principal) => {
+  //   try {
+  //     // console.log(principal);
+  //     const principalString = Principal.fromUint8Array(principal._arr);
+  //     // toast("Featching NFTs,Please Wait! ...", {
+  //     //   icon: "⚠️",
+  //     //   style: {
+  //     //     borderRadius: "10px",
+  //     //     background: "#333",
+  //     //     color: "#fff",
+  //     //   },
+  //     // });
+  //     const result = await backendActor?.listings(principalString);
+  //     console.log("Listing", result);
 
-      // fetchNFTs();
-      // setLoading(false);
-    } catch (error) {
-      console.error("Error fetching listing:", error);
-      toast.error("Error fetching listing");
-      return error; // Return error
-    }
-  };
+  //     // fetchNFTs();
+  //     // setLoading(false);
+  //   } catch (error) {
+  //     console.error("Error fetching listing:", error);
+  //     toast.error("Error fetching listing");
+  //     return error; // Return error
+  //   }
+  // };
 
   const getAddedNftDetails = async (nftDetails) => {
     // Disable further calls if already loading
@@ -333,7 +341,7 @@ function CollectionDetails() {
     setnftquantity(nftDetails.nftQuantity);
     setnftprice(nftDetails.nftPrice);
     setnftdescription(nftDetails.nftDescription);
-    setnftimage(nftDetails.nftImage);
+    // setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
 
     try {
@@ -341,14 +349,18 @@ function CollectionDetails() {
         principalStringg,
         nftDetails.nftName,
         nftDetails.nftDescription,
-        nftDetails.nftImage,
+        // nftDetails.nftImage,
         nftDetails.nftQuantity,
         nftDetails.nftcolor,
         nftDetails.nftPrice,
         nftDetails.nftType,
         nftDetails.artistname,
         nftDetails.newtype,
-        nftDetails.nftSeason
+        nftDetails.nftSeason,
+        nftDetails.imageurl1,
+        nftDetails.imageurl2,
+        nftDetails.imageurl3,
+        nftDetails.imageurl4
       );
 
       if (mintResult instanceof Error) {
@@ -495,6 +507,7 @@ function CollectionDetails() {
     // await getAllCollectionNFT(principal, currentpage);
     // console.log("clicked");
   };
+  console.log(collectiondata);
 
   return (
     <>
@@ -555,7 +568,10 @@ function CollectionDetails() {
               <div className="flex flex-col md:flex-row gap-x-8 items-center bg-[#29292c] w-full p-10 text-[#FFFFFF] rounded-md my-10 justify-between">
                 <img
                   className="w-32 h-32"
-                  src={collectiondata[3]}
+                  src={
+                    JSON.parse(collectiondata[4]).collectionImageURL ||
+                    "default-image.jpg"
+                  }
                   alt={collectiondata[2]}
                 />
                 <div className="space-y-4">

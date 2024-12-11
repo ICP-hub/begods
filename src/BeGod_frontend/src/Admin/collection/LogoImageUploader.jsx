@@ -4,7 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import Skeleton from "react-loading-skeleton";
 import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler";
 
-function LogoImageUploader({ captureUploadedFiles, captureuploadedurl }) {
+function LogoImageUploader({ captureuploadedurl }) {
   const [files, setFiles] = useState();
   const [previews, setPreviews] = useState();
   const [hideUpload, setHideUpload] = useState(false);
@@ -41,9 +41,9 @@ function LogoImageUploader({ captureUploadedFiles, captureuploadedurl }) {
     setHideUpload(true);
 
     // Pass the selected files to the parent component or use them in this component
-    if (captureUploadedFiles) {
-      captureUploadedFiles(selectedFiles);
-    }
+    // if (captureUploadedFiles) {
+    //   captureUploadedFiles(selectedFiles);
+    // }
   };
 
   const UploadedNftImage = async (captureImage) => {

@@ -12,10 +12,11 @@ const NftCard = ({ id, list, collectiondata }) => {
   const isValidPrice = typeof price === "number" && !isNaN(price) && price >= 0;
   console.log(list);
 
-  const image = list[2]?.nonfungible?.thumbnail ?? "Image not found";
+  // const image = list[2]?.nonfungible?.thumbnail ?? "Image not found";
   const metadataJson = list[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
   const nftColor = metadata?.nftcolor ?? "Color not found";
+  const image = metadata?.imageurl1 ?? "Image not found";
   const nftType = metadata?.nftType ?? "Type not found";
   const nftquantity = Number(list[4]) ?? "";
 

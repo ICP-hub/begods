@@ -146,10 +146,14 @@ function Collection() {
                         </button>
                       </div>
 
+                      {/* Updated Image Rendering */}
                       <img
                         className="w-28 h-28 sm:h-40 sm:w-40"
-                        src={collectiondata[3]}
-                        alt=""
+                        src={
+                          JSON.parse(collectiondata[4]).collectionImageURL ||
+                          "default-image.jpg"
+                        }
+                        alt={`collection`}
                       />
                       <div className="mx-auto mt-2 text-sm text-center sm:font-bold">
                         <p className="text-2xl font-semibold">
