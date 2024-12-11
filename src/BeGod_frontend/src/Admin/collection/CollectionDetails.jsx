@@ -133,7 +133,7 @@ function CollectionDetails() {
       const principalString = Principal.fromUint8Array(userPrincipalArray._arr);
       // console.log("before");
       // console.log(principal);
-      const result = await backendActor?.getAllCollectionNFTs(
+      const result = await backendActor?.getFilteredCollectionNFTs(
         principalString,
         10,
         currentpage - 1

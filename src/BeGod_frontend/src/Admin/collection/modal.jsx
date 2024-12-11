@@ -49,26 +49,29 @@ const Modal = (props) => {
     type === "edit" ? cardDetails.newtype : "Quest"
   );
   const [nftSeason, setnftSeason] = useState(
-    type === "edit" ? cardDetails.nftSeason : "Stone Age"
+    type === "edit" ? cardDetails.nftSeason : "Golden Age"
   );
 
-  const [nftFullImage , setNftFullImage] = useState(
+  const [nftFullImage, setNftFullImage] = useState(
     type === "edit" ? cardDetails.nftFullImage : ""
-  )
-
-
-  
+  );
 
   const [nftFullImageURL, setNftFullImageURL] = useState("");
 
   const [hideImageUpload, updateHideImageUploadStatus] = useState(false);
 
-  const [imageurl1, setimageurl1] = useState("");
-  const [imageurl2, setimageurl2] = useState("");
-  const [imageurl3, setimageurl3] = useState("");
-  const [imageurl4, setimageurl4] = useState("");
-
-  console.log(imageurl1);
+  const [imageurl1, setimageurl1] = useState(
+    type === "edit" ? cardDetails.imageurl1 : ""
+  );
+  const [imageurl2, setimageurl2] = useState(
+    type === "edit" ? cardDetails.imageurl1 : ""
+  );
+  const [imageurl3, setimageurl3] = useState(
+    type === "edit" ? cardDetails.imageurl3 : ""
+  );
+  const [imageurl4, setimageurl4] = useState(
+    type === "edit" ? cardDetails.imageurl4 : ""
+  );
 
   const onClickAddButton = () => {
     // event.preventDefault();
@@ -88,9 +91,7 @@ const Modal = (props) => {
       nftSeason &&
       nftFullImage &&
       imageurl1 &&
-      imageurl2 &&
-      imageurl3 &&
-      imageurl4
+      imageurl1
     ) {
       const nftDetails = {
         nftId: uuidv4(),
@@ -137,9 +138,7 @@ const Modal = (props) => {
       nftSeason &&
       nftFullImage &&
       imageurl1 &&
-      imageurl2 &&
-      imageurl3 &&
-      imageurl4
+      imageurl2
     ) {
       const nftDetails = {
         nftId: cardDetails.nftId,
@@ -198,7 +197,7 @@ const Modal = (props) => {
 
   const captureUploadedNftImage = (pic) => {
     setNftImageURL(pic);
-    console.log(nftImageURL);
+    // console.log(nftImageURL);
     // console.log("img", files);
   };
 
@@ -231,11 +230,11 @@ const Modal = (props) => {
 
   const captureUploadedNftFullImage = (pic) => {
     setNftFullImageURL(pic);
-    console.log(nftFullImageURL);
+    // console.log(nftFullImageURL);
     // console.log("img", files);
   };
-  const value = (files) => {
-    console.group("image 3 and 4 called");
+  const value = () => {
+    // console.group("image 3 and 4 called");
   };
   // console.log(nftFullImage, nftFullImageURL);
 
@@ -280,26 +279,26 @@ const Modal = (props) => {
               value={nftType}
               onChange={(e) => setNftType(e.target.value)}
             >
-              <option value="divine" className="text-[16px] text-[#8a8686]">
+              <option value="Divine" className="text-[16px] text-[#8a8686]">
                 Divine
               </option>
               <option value="Mythical" className="text-[16px] text-[#8a8686]">
                 Mythical
               </option>
-              <option value="rare" className="text-[16px] text-[#8a8686]">
+              <option value="Rare" className="text-[16px] text-[#8a8686]">
                 Rare
               </option>
               <option value="Uncommon" className="text-[16px] text-[#8a8686]">
                 Uncommon
               </option>
-              <option value="common" className="text-[16px] text-[#8a8686]">
+              <option value="Common" className="text-[16px] text-[#8a8686]">
                 Common
               </option>
               <option value="Promo" className="text-[16px] text-[#8a8686]">
                 Promo
               </option>
-              <option value="Misc" className="text-[16px] text-[#8a8686]">
-                Misc
+              <option value="Assets" className="text-[16px] text-[#8a8686]">
+                Assets
               </option>
             </select>
           </label>
@@ -346,9 +345,6 @@ const Modal = (props) => {
                 Item
               </option>
               <option value="Asset" className="text-[16px] text-[#8a8686]">
-                Asset
-              </option>
-              <option value="Asset" className="text-[16px] text-[#8a8686]">
                 Booster
               </option>
             </select>
@@ -379,7 +375,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            HD Image
+            Head HD Image
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 captureUploadedNftImage={captureUploadedNftImage}
@@ -407,17 +403,44 @@ const Modal = (props) => {
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
             Full HD Image
+            {type === "add" || hideImageUpload ? (
+              <ImageUploader
+                captureUploadedNftImage={captureUploadedNftFullImage}
+                captureUploadedNftImageFile={captureUploadedNftFullImageFile}
+                imageurlchange={setimageurl2}
+              />
+            ) : (
+              <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
+                <img
+                  src={nftFullImage}
+                  alt="Selected"
+                  className="object-cover w-full h-full rounded-lg"
+                />
+                <button
+                  onClick={() => updateHideImageUploadStatus(false)}
+                  className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
+                >
+                  <RxCross2 className="text-black" size={15} />
+                </button>
+              </div>
+            )}
+          </label>
+        </div>
+
+        {/* <div className="mt-1">
+          <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
+            Full HD Image
             <ImageUploader
               captureUploadedNftImage={captureUploadedNftFullImage}
               captureUploadedNftImageFile={captureUploadedNftFullImageFile}
               imageurlchange={setimageurl2}
             />
           </label>
-        </div>
+        </div> */}
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Full SD Image
+            Head SD Image
             <ImageUploader
               captureUploadedNftImage={value}
               captureUploadedNftImageFile={value}
@@ -428,7 +451,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            SD Image
+            Full SD Image
             <ImageUploader
               captureUploadedNftImage={value}
               captureUploadedNftImageFile={value}
@@ -444,8 +467,11 @@ const Modal = (props) => {
               value={nftSeason}
               onChange={(e) => setnftSeason(e.target.value)}
             >
-              <option value="Stone Age" className="text-[16px] text-[#8a8686]">
-                Stone Age
+              <option
+                value="Origins/Stone Age"
+                className="text-[16px] text-[#8a8686]"
+              >
+                Origins/Stone Age
               </option>
               <option value="Golden Age" className="text-[16px] text-[#8a8686]">
                 Golden Age
