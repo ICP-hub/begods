@@ -33,12 +33,12 @@ const Modal = (props) => {
   const [nftDescription, setNftDescription] = useState(
     type === "edit" ? cardDetails.nftDescription : ""
   );
-  const [nftImage, setNftImage] = useState(
-    type === "edit" ? cardDetails.nftImage : ""
-  );
-  const [nftImageURL, setNftImageURL] = useState(
-    type === "edit" ? cardDetails.nftImageURL : ""
-  );
+  // const [nftImage, setNftImage] = useState(
+  //   type === "edit" ? cardDetails.nftImage : ""
+  // );
+  // const [nftImageURL, setNftImageURL] = useState(
+  //   type === "edit" ? cardDetails.nftImageURL : ""
+  // );
   const [nftcolor, setnftcolor] = useState(
     type === "edit" ? cardDetails.nftcolor : "Golden"
   );
@@ -49,26 +49,31 @@ const Modal = (props) => {
     type === "edit" ? cardDetails.newtype : "Quest"
   );
   const [nftSeason, setnftSeason] = useState(
-    type === "edit" ? cardDetails.nftSeason : "Stone Age"
+    type === "edit" ? cardDetails.nftSeason : "Golden Age"
   );
 
-  const [nftFullImage , setNftFullImage] = useState(
-    type === "edit" ? cardDetails.nftFullImage : ""
-  )
+  // const [nftFullImage, setNftFullImage] = useState(
+  //   type === "edit" ? cardDetails.nftFullImage : ""
+  // );
 
-
-  
-
-  const [nftFullImageURL, setNftFullImageURL] = useState("");
+  // const [nftFullImageURL, setNftFullImageURL] = useState("");
 
   const [hideImageUpload, updateHideImageUploadStatus] = useState(false);
+  // const [hideImageUpload, setHideImageUpload] = useState(true);
+  // const updateHideImageUploadStatus = (status) => setHideImageUpload(status);
 
-  const [imageurl1, setimageurl1] = useState("");
-  const [imageurl2, setimageurl2] = useState("");
-  const [imageurl3, setimageurl3] = useState("");
-  const [imageurl4, setimageurl4] = useState("");
-
-  console.log(imageurl1);
+  const [imageurl1, setimageurl1] = useState(
+    type === "edit" ? cardDetails.imageurl1 : ""
+  );
+  const [imageurl2, setimageurl2] = useState(
+    type === "edit" ? cardDetails.imageurl2 : ""
+  );
+  const [imageurl3, setimageurl3] = useState(
+    type === "edit" ? cardDetails.imageurl3 : ""
+  );
+  const [imageurl4, setimageurl4] = useState(
+    type === "edit" ? cardDetails.imageurl4 : ""
+  );
 
   const onClickAddButton = () => {
     // event.preventDefault();
@@ -80,32 +85,30 @@ const Modal = (props) => {
       nftQuantity &&
       nftPrice != 0 &&
       nftDescription &&
-      nftImage &&
-      nftImageURL &&
+      // nftImage &&
+      // nftImageURL &&
       nftcolor &&
       // arstistname &&
       newtype &&
       nftSeason &&
-      nftFullImage &&
+      // nftFullImage &&
       imageurl1 &&
-      imageurl2 &&
-      imageurl3 &&
-      imageurl4
+      imageurl2
     ) {
       const nftDetails = {
         nftId: uuidv4(),
         nftName,
         nftType,
         nftQuantity,
-        nftImage,
-        nftImageURL,
+        // nftImage,
+        // nftImageURL,
         nftPrice,
         nftDescription,
         nftcolor,
         arstistname,
         newtype,
         nftSeason,
-        nftFullImage,
+        // nftFullImage,
         imageurl1,
         imageurl2,
         imageurl3,
@@ -129,32 +132,30 @@ const Modal = (props) => {
       nftQuantity &&
       nftPrice &&
       nftDescription &&
-      nftImage &&
-      nftImageURL &&
+      // nftImage &&
+      // nftImageURL &&
       nftcolor &&
       // arstistname &&
       newtype &&
       nftSeason &&
-      nftFullImage &&
+      // nftFullImage &&
       imageurl1 &&
-      imageurl2 &&
-      imageurl3 &&
-      imageurl4
+      imageurl2
     ) {
       const nftDetails = {
         nftId: cardDetails.nftId,
         nftName,
         nftType,
         nftQuantity,
-        nftImage,
-        nftImageURL,
+        // nftImage,
+        // nftImageURL,
         nftPrice,
         nftDescription,
         nftcolor,
         arstistname,
         newtype,
         nftSeason,
-        nftFullImage,
+        // nftFullImage,
         imageurl1,
         imageurl2,
         imageurl3,
@@ -169,75 +170,75 @@ const Modal = (props) => {
     }
   };
 
-  const captureUploadedNftImageFile = async (files) => {
-    const file = files[0];
-    if (file) {
-      try {
-        let options = {
-          maxSizeMB: 0.06,
-          maxWidthOrHeight: 300,
-          useWebWorker: true,
-        };
-        let compressedFile = await imageCompression(file, options);
+  // const captureUploadedNftImageFile = async (files) => {
+  //   const file = files[0];
+  //   if (file) {
+  //     try {
+  //       let options = {
+  //         maxSizeMB: 0.06,
+  //         maxWidthOrHeight: 300,
+  //         useWebWorker: true,
+  //       };
+  //       let compressedFile = await imageCompression(file, options);
 
-        while (compressedFile.size > 60 * 1024) {
-          options.maxSizeMB *= 0.9;
-          compressedFile = await imageCompression(file, options);
-        }
+  //       while (compressedFile.size > 60 * 1024) {
+  //         options.maxSizeMB *= 0.9;
+  //         compressedFile = await imageCompression(file, options);
+  //       }
 
-        console.log("Compressed file size:", compressedFile.size);
+  //       console.log("Compressed file size:", compressedFile.size);
 
-        const reader = new FileReader();
-        reader.onloadend = () => setNftImage(reader.result);
-        reader.readAsDataURL(compressedFile);
-      } catch (error) {
-        console.error("Error during file compression:", error);
-      }
-    }
-  };
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => setNftImage(reader.result);
+  //       reader.readAsDataURL(compressedFile);
+  //     } catch (error) {
+  //       console.error("Error during file compression:", error);
+  //     }
+  //   }
+  // };
 
-  const captureUploadedNftImage = (pic) => {
-    setNftImageURL(pic);
-    console.log(nftImageURL);
-    // console.log("img", files);
-  };
+  // const captureUploadedNftImage = (pic) => {
+  //   setNftImageURL(pic);
+  //   // console.log(nftImageURL);
+  //   // console.log("img", files);
+  // };
 
-  const captureUploadedNftFullImageFile = async (files) => {
-    const file = files[0];
-    if (file) {
-      try {
-        let options = {
-          maxSizeMB: 0.06,
-          maxWidthOrHeight: 200,
-          useWebWorker: true,
-        };
-        let compressedFile = await imageCompression(file, options);
+  // const captureUploadedNftFullImageFile = async (files) => {
+  //   const file = files[0];
+  //   if (file) {
+  //     try {
+  //       let options = {
+  //         maxSizeMB: 0.06,
+  //         maxWidthOrHeight: 200,
+  //         useWebWorker: true,
+  //       };
+  //       let compressedFile = await imageCompression(file, options);
 
-        while (compressedFile.size > 60 * 1024) {
-          options.maxSizeMB *= 0.9;
-          compressedFile = await imageCompression(file, options);
-        }
+  //       while (compressedFile.size > 60 * 1024) {
+  //         options.maxSizeMB *= 0.9;
+  //         compressedFile = await imageCompression(file, options);
+  //       }
 
-        console.log("Compressed file size:", compressedFile.size);
+  //       console.log("Compressed file size:", compressedFile.size);
 
-        const reader = new FileReader();
-        reader.onloadend = () => setNftFullImage(reader.result);
-        reader.readAsDataURL(compressedFile);
-      } catch (error) {
-        console.error("Error during file compression:", error);
-      }
-    }
-  };
+  //       const reader = new FileReader();
+  //       reader.onloadend = () => setNftFullImage(reader.result);
+  //       reader.readAsDataURL(compressedFile);
+  //     } catch (error) {
+  //       console.error("Error during file compression:", error);
+  //     }
+  //   }
+  // };
 
-  const captureUploadedNftFullImage = (pic) => {
-    setNftFullImageURL(pic);
-    console.log(nftFullImageURL);
-    // console.log("img", files);
-  };
-  const value = (files) => {
-    console.group("image 3 and 4 called");
-  };
-  // console.log(nftFullImage, nftFullImageURL);
+  // const captureUploadedNftFullImage = (pic) => {
+  //   setNftFullImageURL(pic);
+  //   // console.log(nftFullImageURL);
+  //   // console.log("img", files);
+  // };
+  // const value = () => {
+  //   // console.group("image 3 and 4 called");
+  // };
+  // // console.log(nftFullImage, nftFullImageURL);
 
   return (
     <div className="add_new_nft_popup_bg_container">
@@ -280,32 +281,32 @@ const Modal = (props) => {
               value={nftType}
               onChange={(e) => setNftType(e.target.value)}
             >
-              <option value="divine" className="text-[16px] text-[#8a8686]">
+              <option value="Divine" className="text-[16px] text-[#8a8686]">
                 Divine
               </option>
               <option value="Mythical" className="text-[16px] text-[#8a8686]">
                 Mythical
               </option>
-              <option value="rare" className="text-[16px] text-[#8a8686]">
+              <option value="Rare" className="text-[16px] text-[#8a8686]">
                 Rare
               </option>
               <option value="Uncommon" className="text-[16px] text-[#8a8686]">
                 Uncommon
               </option>
-              <option value="common" className="text-[16px] text-[#8a8686]">
+              <option value="Common" className="text-[16px] text-[#8a8686]">
                 Common
               </option>
               <option value="Promo" className="text-[16px] text-[#8a8686]">
                 Promo
               </option>
-              <option value="Misc" className="text-[16px] text-[#8a8686]">
-                Misc
+              <option value="Assets" className="text-[16px] text-[#8a8686]">
+                Assets
               </option>
             </select>
           </label>
 
           <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px] ">
-            Artist Name:
+            Artist Name (Optional):
             <input
               value={arstistname}
               onChange={(e) => {
@@ -346,9 +347,6 @@ const Modal = (props) => {
                 Item
               </option>
               <option value="Asset" className="text-[16px] text-[#8a8686]">
-                Asset
-              </option>
-              <option value="Asset" className="text-[16px] text-[#8a8686]">
                 Booster
               </option>
             </select>
@@ -379,22 +377,22 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            HD Image
+            Head HD Image
             {type === "add" || hideImageUpload ? (
               <ImageUploader
-                captureUploadedNftImage={captureUploadedNftImage}
-                captureUploadedNftImageFile={captureUploadedNftImageFile}
+                // captureUploadedNftImage={captureUploadedNftImage}
+                // captureUploadedNftImageFile={captureUploadedNftImageFile}
                 imageurlchange={setimageurl1}
               />
             ) : (
               <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
                 <img
-                  src={nftImage}
+                  src={imageurl1}
                   alt="Selected"
                   className="object-cover w-full h-full rounded-lg"
                 />
                 <button
-                  onClick={() => updateHideImageUploadStatus(false)}
+                  onClick={() => updateHideImageUploadStatus(true)}
                   className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
                 >
                   <RxCross2 className="text-black" size={15} />
@@ -407,35 +405,96 @@ const Modal = (props) => {
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
             Full HD Image
-            <ImageUploader
-              captureUploadedNftImage={captureUploadedNftFullImage}
-              captureUploadedNftImageFile={captureUploadedNftFullImageFile}
-              imageurlchange={setimageurl2}
-            />
+            {type === "add" || hideImageUpload ? (
+              <ImageUploader
+                // captureUploadedNftImage={captureUploadedNftFullImage}
+                // captureUploadedNftImageFile={captureUploadedNftFullImageFile}
+                imageurlchange={setimageurl2}
+              />
+            ) : (
+              <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
+                <img
+                  src={imageurl2}
+                  alt="Selected"
+                  className="object-cover w-full h-full rounded-lg"
+                />
+                <button
+                  onClick={() => updateHideImageUploadStatus(true)}
+                  className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
+                >
+                  <RxCross2 className="text-black" size={15} />
+                </button>
+              </div>
+            )}
           </label>
         </div>
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Full SD Image
-            <ImageUploader
-              captureUploadedNftImage={value}
-              captureUploadedNftImageFile={value}
-              imageurlchange={setimageurl3}
-            />
+            Head SD Image (Optional)
+            {type === "add" || hideImageUpload ? (
+              <ImageUploader
+                // captureUploadedNftImage={value}
+                // captureUploadedNftImageFile={value}
+                imageurlchange={setimageurl3}
+              />
+            ) : imageurl3 ? ( // Check if imageurl3 is available
+              <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
+                <img
+                  src={imageurl3}
+                  alt="Selected"
+                  className="object-cover w-full h-full rounded-lg"
+                />
+                <button
+                  onClick={() => updateHideImageUploadStatus(true)}
+                  className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
+                >
+                  <RxCross2 className="text-black" size={15} />
+                </button>
+              </div>
+            ) : (
+              <ImageUploader
+                // captureUploadedNftImage={value}
+                // captureUploadedNftImageFile={value}
+                imageurlchange={setimageurl3}
+              />
+            )}
           </label>
         </div>
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            SD Image
-            <ImageUploader
-              captureUploadedNftImage={value}
-              captureUploadedNftImageFile={value}
-              imageurlchange={setimageurl4}
-            />
+            Full SD Image (Optional)
+            {type === "add" || hideImageUpload ? (
+              <ImageUploader
+                // captureUploadedNftImage={value}
+                // captureUploadedNftImageFile={value}
+                imageurlchange={setimageurl4}
+              />
+            ) : imageurl4 ? ( // Check if imageurl3 is available
+              <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
+                <img
+                  src={imageurl4}
+                  alt="Selected"
+                  className="object-cover w-full h-full rounded-lg"
+                />
+                <button
+                  onClick={() => updateHideImageUploadStatus(true)}
+                  className="absolute top-0 right-0 flex items-center justify-center w-4 h-4 transform translate-x-1/2 -translate-y-1/2 bg-white rounded-full"
+                >
+                  <RxCross2 className="text-black" size={15} />
+                </button>
+              </div>
+            ) : (
+              <ImageUploader
+                // captureUploadedNftImage={value}
+                // captureUploadedNftImageFile={value}
+                imageurlchange={setimageurl4}
+              />
+            )}
           </label>
         </div>
+
         <div className="mt-1 flex flex-col sm:flex-row sm:gap-4 md:flex-row md:gap-4 w-full h-[120px] md:h-[60px] mb-0">
           <label className="w-full sm:w-1/2 flex flex-col text-[#FFFFFF] gap-2 md:gap-2 text-[14px] md:text-[18px] leading-[25px]">
             NFT Season:
@@ -444,8 +503,11 @@ const Modal = (props) => {
               value={nftSeason}
               onChange={(e) => setnftSeason(e.target.value)}
             >
-              <option value="Stone Age" className="text-[16px] text-[#8a8686]">
-                Stone Age
+              <option
+                value="Origins/Stone Age"
+                className="text-[16px] text-[#8a8686]"
+              >
+                Origins/Stone Age
               </option>
               <option value="Golden Age" className="text-[16px] text-[#8a8686]">
                 Golden Age

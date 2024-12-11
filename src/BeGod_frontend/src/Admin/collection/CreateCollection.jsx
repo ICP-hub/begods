@@ -38,7 +38,7 @@ const CreateCollection = () => {
   const [modal, setModal] = useState(false);
   const [nftCardsList, setNftCardsList] = useState([]);
   const { backendActor, canisterId } = useAuth();
-  const [Ufile, setUFile] = useState([]);
+  // const [Ufile, setUFile] = useState([]);
   const [base64String, setBase64String] = useState("");
   const [nftType, setnfttype] = useState("");
   const [nftname, setnftname] = useState("");
@@ -97,7 +97,12 @@ const CreateCollection = () => {
     // e.preventDefault();
 
     // Form validation checks
-    if (!name || !description || !Ufile || nftCardsList.length === 0) {
+    if (
+      !name ||
+      !description ||
+      !collectionImageURL ||
+      nftCardsList.length === 0
+    ) {
       toast.error("Please fill in all required fields.");
       return;
     }
@@ -122,40 +127,40 @@ const CreateCollection = () => {
     }
   };
 
-  const handleFiles = async (files) => {
-    console.log("Uploaded files:", files);
-    setUFile(files);
+  // const handleFiles = async (files) => {
+  //   console.log("Uploaded files:", files);
+  //   setUFile(files);
 
-    const file = files[0]; // Get the first uploaded file
-    if (file) {
-      try {
-        let options = {
-          maxSizeMB: 0.06, // 60KB
-          maxWidthOrHeight: 300,
-          useWebWorker: true,
-        };
+  //   // const file = files[0]; // Get the first uploaded file
+  //   // if (file) {
+  //   //   try {
+  //   //     let options = {
+  //   //       maxSizeMB: 0.06, // 60KB
+  //   //       maxWidthOrHeight: 300,
+  //   //       useWebWorker: true,
+  //   //     };
 
-        let compressedFile = await imageCompression(file, options);
-        while (compressedFile.size > 60 * 1024) {
-          options.maxSizeMB *= 0.9;
-          compressedFile = await imageCompression(file, options);
-        }
+  //   //     let compressedFile = await imageCompression(file, options);
+  //   //     while (compressedFile.size > 60 * 1024) {
+  //   //       options.maxSizeMB *= 0.9;
+  //   //       compressedFile = await imageCompression(file, options);
+  //   //     }
 
-        console.log("Compressed file size:", compressedFile.size);
+  //   //     console.log("Compressed file size:", compressedFile.size);
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setBase64String(reader.result);
-        };
+  //   //     const reader = new FileReader();
+  //   //     reader.onloadend = () => {
+  //   //       setBase64String(reader.result);
+  //   //     };
 
-        reader.readAsDataURL(compressedFile);
-      } catch (error) {
-        console.error("Error during file compression:", error);
-      }
-    }
-  };
+  //   //     reader.readAsDataURL(compressedFile);
+  //   //   } catch (error) {
+  //   //     console.error("Error during file compression:", error);
+  //   //   }
+  //   // }
+  // };
 
-  const createExtData = async (name, base64String, description, collColor) => {
+  const createExtData = async (name, description, collColor) => {
     let n = nftCardsList.length;
     settotalnft(n);
     try {
@@ -167,7 +172,7 @@ const CreateCollection = () => {
       console.log(name, metadata, "calling collection creation");
       const report = await backendActor?.createExtCollection(
         name,
-        base64String,
+        "base64String",
         metadata
       );
       console.log(report);
@@ -197,7 +202,7 @@ const CreateCollection = () => {
     answ,
     nftname,
     nftdescription,
-    nftimage,
+    // nftimage,
     nftquantity,
     nftcolor,
     nftPrice,
@@ -205,7 +210,7 @@ const CreateCollection = () => {
     arstistname,
     newtype,
     nftSeason,
-    nftFullImage,
+    // nftFullImage,
     imageurl1,
     imageurl2,
     imageurl3,
@@ -244,7 +249,7 @@ const CreateCollection = () => {
         nftname,
         nftdescription,
         "thumbnail",
-        nftimage,
+        "nftimage",
         metadataContainer ? [metadataContainer] : [],
         Number(nftquantity)
       );
@@ -331,7 +336,7 @@ const CreateCollection = () => {
     setnftquantity(nftDetails.nftQuantity);
     setnftprice(nftDetails.nftPrice);
     setnftdescription(nftDetails.nftDescription);
-    setnftimage(nftDetails.nftImage);
+    // setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
   };
 
@@ -352,7 +357,7 @@ const CreateCollection = () => {
     setnftquantity(nftDetails.nftQuantity);
     setnftprice(nftDetails.nftPrice);
     setnftdescription(nftDetails.nftDescription);
-    setnftimage(nftDetails.nftImage);
+    // setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
   };
 
@@ -374,12 +379,7 @@ const CreateCollection = () => {
     let hasError = false;
     let errorShown = false;
     try {
-      const answ = await createExtData(
-        name,
-        base64String,
-        description,
-        collColor
-      );
+      const answ = await createExtData(name, description, collColor);
       if (answ instanceof Error) {
         hasError = true;
         if (!errorShown) {
@@ -396,7 +396,7 @@ const CreateCollection = () => {
               answ,
               val.nftName,
               val.nftDescription,
-              val.nftImage,
+              // val.nftImage,
               val.nftQuantity,
               val.nftcolor,
               val.nftPrice,
@@ -404,7 +404,7 @@ const CreateCollection = () => {
               val.arstistname,
               val.newtype,
               val.nftSeason,
-              val.nftFullImage,
+              // val.nftFullImage,
               val.imageurl1,
               val.imageurl2,
               val.imageurl3,
@@ -553,7 +553,7 @@ const CreateCollection = () => {
                           Logo
                         </span>
                         <LogoImageUploader
-                          captureUploadedFiles={handleFiles}
+                          // captureUploadedFiles={handleFiles}
                           captureuploadedurl={setcollectionImageURL}
                         />
                       </label>

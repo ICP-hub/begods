@@ -9,8 +9,8 @@ function ImageUploader(props) {
   const [hideUpload, setHideUpload] = useState(false);
   const [fileType, setFileType] = useState("file");
   const {
-    captureUploadedNftImage,
-    captureUploadedNftImageFile,
+    // captureUploadedNftImage,
+    // captureUploadedNftImageFile,
     imageurlchange,
   } = props;
 
@@ -21,7 +21,7 @@ function ImageUploader(props) {
       URL.createObjectURL(file)
     );
     setPreviews(objectUrls);
-    captureUploadedNftImageFile(files);
+    // captureUploadedNftImageFile(files);
 
     UploadedNftImage(objectUrls);
     // Cleanup function to revoke object URLs and free memory
@@ -111,7 +111,7 @@ function ImageUploader(props) {
       )}
       {previews &&
         previews.map((pic, index) => {
-          captureUploadedNftImage(pic);
+          // captureUploadedNftImage(pic);
           return (
             <div
               key={index}

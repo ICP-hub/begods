@@ -30,6 +30,7 @@ const NftDetails = () => {
   const metadataJson = nftdata[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
   console.log(metadata);
+  const image = metadata?.imageurl1 ?? "image not found";
 
   const collid = collectiondata[1];
 
@@ -99,9 +100,9 @@ const NftDetails = () => {
               />
             ) : (
               <img
-                src={nftdata[2]?.nonfungible?.thumbnail ?? "Image not found"}
+                src={image}
                 alt="NFT Thumbnail"
-                className="object-cover rounded-md w-full max-w-[85%] sm:max-w-[90%] md:max-w-[95%] aspect-square"
+                className="object-full rounded-md w-full max-w-[85%] sm:max-w-[90%] md:max-w-[95%] aspect-square"
               />
             )}
           </div>

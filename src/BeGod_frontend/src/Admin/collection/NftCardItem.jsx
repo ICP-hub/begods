@@ -10,7 +10,7 @@ const NftCardItem = (props) => {
     nftQuantity,
     nftType,
     nftPrice,
-    nftImage,
+    imageurl1,
   } = nftDetails;
 
   return (
@@ -18,7 +18,7 @@ const NftCardItem = (props) => {
       <div className="flex flex-col md:flex-row w-full gap-4">
         {/* Image Section */}
         <img
-          src={nftImage}
+          src={imageurl1}
           alt="NFT"
           className="object-contain w-full md:w-[40%] h-32 rounded-lg"
         />

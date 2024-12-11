@@ -12,12 +12,13 @@ const NftCard = ({ id, list, collectiondata }) => {
   const isValidPrice = typeof price === "number" && !isNaN(price) && price >= 0;
   console.log(list);
 
-  const image = list[2]?.nonfungible?.thumbnail ?? "Image not found";
+  // const image = list[2]?.nonfungible?.thumbnail ?? "Image not found";
   const metadataJson = list[2]?.nonfungible?.metadata?.[0]?.json;
   const metadata = metadataJson ? JSON.parse(metadataJson) : null;
   const nftColor = metadata?.nftcolor ?? "Color not found";
+  const image = metadata?.imageurl1 ?? "Image not found";
   const nftType = metadata?.nftType ?? "Type not found";
-  console.log(nftType);
+  const nftquantity = Number(list[4]) ?? "";
 
   return (
     <div
@@ -66,9 +67,9 @@ const NftCard = ({ id, list, collectiondata }) => {
               Type: {nftType}
             </h2>
 
-            {/* <h2 className="mt-1 text-xs text-center sm:text-lg">
-              Quantity: {quantity}
-            </h2> */}
+            <h2 className="mt-1 text-xs text-center sm:text-lg">
+              Quantity: {nftquantity}
+            </h2>
             <Link
               to={`/Admin/collection/collectionDetails/${id}/nft/${id}`}
               className="flex items-center justify-center w-full"
