@@ -74,7 +74,7 @@ function ImageUploader(props) {
           console.log("nft url", url);
           imageurlchange(url);
         } else if (acd === "ic") {
-          const url = `http://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.icp0.io/?&imgid=${id}`;
+          const url = `https://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.raw.icp0.io/?imgid=${id}`;
           console.log("nft url", url);
           imageurlchange(url);
         }

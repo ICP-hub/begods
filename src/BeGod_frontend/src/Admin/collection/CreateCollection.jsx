@@ -255,36 +255,30 @@ const CreateCollection = () => {
       );
       setDone((done) => done + 1);
 
-      console.log(result, "nft mint data");
-      const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
-      console.log(es8_price, "price");
       if (result && result.length > 0) {
-        result.map((val, key) => {
-          // console.log(key, "in mint");
-          // console.log(val);
-          getNftTokenId(answ, val[1], es8_price);
-        });
+        console.log(result, "NFT mint data");
+        const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
+        console.log(es8_price, "price");
+
+        let flag = true;
+
+        for (const val of result) {
+          if (flag) {
+            try {
+              flag = false;
+              await getNftTokenId(answ, val[1], es8_price);
+              flag = true;
+            } catch (err) {
+              console.error("Error in getNftTokenId inside the mintnft:", err);
+              throw err;
+            }
+          }
+        }
+      } else {
+        throw new Error("Minting failed");
       }
-
-      // if (result && result.length > 0) {
-      //   await Promise.all(
-      //     result.map((val) => getNftTokenId(answ, val[1], es8_price))
-      //   );
-      // } else {
-      //   throw new Error("Minting failed");
-      // }
-
-      // if (result) {
-      //   setTokenId(result[0]);
-      //   console.log("NFT Minted: ", result[0]);
-      //   await getNftTokenId(answ, result[0]);
-      // } else {
-      //   throw new Error("Error in mintNFT");
-      //   toast.error("Error in mintNFT");
-      // }
     } catch (error) {
-      console.error("Error minting NFT:", error);
-      toast.error("Error minting NFT");
+      console.error("Error minting NFT:", error.message);
       return error; // Return error
     }
   };
@@ -298,7 +292,7 @@ const CreateCollection = () => {
     } catch (error) {
       console.error("Error fetching NFT token ID:", error);
       toast.error("Error in getNftTokenId");
-      return error;
+      throw error; // Rethrow error to handle it in the parent function
     }
   };
 
@@ -314,17 +308,17 @@ const CreateCollection = () => {
         price: priceE8s ? [priceE8s] : [],
       };
       const result = await backendActor?.listprice(principal, request);
-      console.log("lisprice called", done);
+      console.log("listprice called");
+
       if (result) {
         console.log("List Price Result:", result);
       } else {
         throw new Error("listprice is not working");
-        toast.error("listprice is not working");
       }
     } catch (error) {
       console.error("Error listing price:", error);
       toast.error("Error listing price");
-      return error; // Return error
+      throw error;
     }
   };
 
@@ -379,15 +373,24 @@ const CreateCollection = () => {
     let hasError = false;
     let errorShown = false;
     try {
-      const answ = await createExtData(name, description, collColor);
+      const answ = await createExtData(
+        name,
+
+        description,
+        collColor
+      );
+      console.log(answ);
       if (answ instanceof Error) {
         hasError = true;
+        console.log("inside if of haserror");
         if (!errorShown) {
           toast.error("Error in creating collection: " + answ);
           errorShown = true;
+          console.log("inside if of errorshown");
         }
         return answ;
       }
+      console.log(hasError, errorShown);
       setcanId(answ);
       if (nftCardsList && nftCardsList.length > 0 && !hasError) {
         for (let val of nftCardsList) {
@@ -414,7 +417,10 @@ const CreateCollection = () => {
             if (mintResult instanceof Error) {
               hasError = true;
               if (!errorShown) {
-                toast.error("Error in minting NFT: " + mintResult);
+                toast.error(
+                  "Error in minting NFT inside final call: " +
+                    mintResult.message
+                );
                 errorShown = true;
               }
 
@@ -425,8 +431,13 @@ const CreateCollection = () => {
           } catch (mintError) {
             hasError = true;
             if (!errorShown) {
-              console.error("Error in minting NFT: ", mintError);
-              toast.error("Error in minting NFT: " + mintError);
+              console.error(
+                "Error in minting NFT inside final call: ",
+                mintError
+              );
+              toast.error(
+                "Error in minting NFT inside final call: " + mintError.message
+              );
               errorShown = true;
             }
             break;
