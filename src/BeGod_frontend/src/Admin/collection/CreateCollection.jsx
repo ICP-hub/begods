@@ -25,6 +25,7 @@ import SuccessModal from "./SuccessModal.jsx";
 import toast from "react-hot-toast";
 import imageCompression from "browser-image-compression";
 import Createcollectionloader from "./Createcollectionloader.jsx";
+import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler";
 
 const CreateCollection = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const CreateCollection = () => {
   const [modal, setModal] = useState(false);
   const [nftCardsList, setNftCardsList] = useState([]);
   const { backendActor, canisterId } = useAuth();
-  // const [Ufile, setUFile] = useState([]);
+  const [Ufile, setUFile] = useState([]);
   const [base64String, setBase64String] = useState("");
   const [nftType, setnfttype] = useState("");
   const [nftname, setnftname] = useState("");
@@ -60,6 +61,7 @@ const CreateCollection = () => {
   const [done, setDone] = useState(0);
   const [totalnft, settotalnft] = useState();
   const [collectionImageURL, setcollectionImageURL] = useState("");
+  const [collectionBloburl, setcollectionBloburl] = useState("");
 
   const { user } = useSelector((state) => state.auth);
   const principal_id = user;
@@ -100,7 +102,7 @@ const CreateCollection = () => {
     if (
       !name ||
       !description ||
-      !collectionImageURL ||
+      !collectionBloburl ||
       nftCardsList.length === 0
     ) {
       toast.error("Please fill in all required fields.");
@@ -127,42 +129,149 @@ const CreateCollection = () => {
     }
   };
 
-  // const handleFiles = async (files) => {
-  //   console.log("Uploaded files:", files);
-  //   setUFile(files);
+  const handleFiles = async (files) => {
+    console.log("Uploaded files:", files);
+    setUFile(files);
 
-  //   // const file = files[0]; // Get the first uploaded file
-  //   // if (file) {
-  //   //   try {
-  //   //     let options = {
-  //   //       maxSizeMB: 0.06, // 60KB
-  //   //       maxWidthOrHeight: 300,
-  //   //       useWebWorker: true,
-  //   //     };
+    const file = files[0]; // Get the first uploaded file
+    if (file) {
+      try {
+        // let options = {
+        //   maxSizeMB: 0.06, // 60KB
+        //   maxWidthOrHeight: 300,
+        //   useWebWorker: true,
+        // };
 
-  //   //     let compressedFile = await imageCompression(file, options);
-  //   //     while (compressedFile.size > 60 * 1024) {
-  //   //       options.maxSizeMB *= 0.9;
-  //   //       compressedFile = await imageCompression(file, options);
-  //   //     }
+        // let compressedFile = await imageCompression(file, options);
+        // while (compressedFile.size > 60 * 1024) {
+        //   options.maxSizeMB *= 0.9;
+        //   compressedFile = await imageCompression(file, options);
+        // }
 
-  //   //     console.log("Compressed file size:", compressedFile.size);
+        // console.log("Compressed file size:", compressedFile.size);
 
-  //   //     const reader = new FileReader();
-  //   //     reader.onloadend = () => {
-  //   //       setBase64String(reader.result);
-  //   //     };
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setBase64String(reader.result);
+        };
 
-  //   //     reader.readAsDataURL(compressedFile);
-  //   //   } catch (error) {
-  //   //     console.error("Error during file compression:", error);
-  //   //   }
-  //   // }
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Error during file compression:", error);
+      }
+    }
+  };
+  // const handleFiles = async (bloburl) => {
+  //   setcollectionBloburl(bloburl);
+  //   console.log(bloburl);
+  //   // const url = await UploadedNftImage(bloburl);
+  //   // console.log(url);
   // };
+  const UploadedNftImage = async (captureImage) => {
+    if (!BeGod_assethandler) {
+      throw new Error("BeGod_assethandler is not initialized.");
+    }
 
-  const createExtData = async (name, description, collColor) => {
+    try {
+      if (!captureImage) {
+        throw new Error("captureImage is not provided or invalid.");
+      }
+
+      // Handle URL or Blob
+      let blob;
+      if (typeof captureImage === "string") {
+        const response = await fetch(captureImage);
+        blob = await response.blob();
+      } else if (captureImage instanceof Blob) {
+        blob = captureImage;
+      } else {
+        throw new Error("captureImage must be a valid URL or Blob.");
+      }
+
+      // Convert Blob to ArrayBuffer
+      const arrayBuffer = await blob.arrayBuffer();
+
+      // Upload Image
+      const id = Date.now().toString();
+      const result1 = await BeGod_assethandler.uploadImg(id, [
+        ...new Uint8Array(arrayBuffer),
+      ]);
+      console.log(result1);
+
+      // Environment Variables
+      const acd = process.env.DFX_NETWORK;
+      const canisterId = process.env.CANISTER_ID_BEGOD_ASSETHANDLER;
+
+      if (!acd || !canisterId) {
+        throw new Error(
+          "Environment variables are missing: DFX_NETWORK or CANISTER_ID_BEGOD_ASSETHANDLER."
+        );
+      }
+
+      // Generate and Return URL
+      let url;
+      if (acd === "local") {
+        url = `http://127.0.0.1:4943/?canisterId=${canisterId}&imgid=${id}`;
+      } else if (acd === "ic") {
+        url = `https://${canisterId}.raw.icp0.io/?imgid=${id}`;
+      } else {
+        throw new Error("Invalid DFX_NETWORK value.");
+      }
+
+      console.log("NFT URL:", url);
+      return url;
+    } catch (error) {
+      console.error("Error in UploadedNftImage:", error);
+      return null; // Return null in case of error
+    }
+  };
+
+  const UploadedNftImageusingBase64 = async (base64File) => {
+    if (BeGod_assethandler) {
+      try {
+        console.log(base64File);
+
+        // Generate a unique ID for the image
+        const id = Date.now().toString();
+
+        // Convert Base64 string to ArrayBuffer
+        const binaryString = atob(base64File.split(",")[1]); // Remove the metadata prefix if present
+        const length = binaryString.length;
+        const arrayBuffer = new Uint8Array(length);
+
+        for (let i = 0; i < length; i++) {
+          arrayBuffer[i] = binaryString.charCodeAt(i);
+        }
+
+        // Upload the image to the canister
+        const result1 = await BeGod_assethandler?.uploadImg(id, [
+          ...arrayBuffer,
+        ]);
+        console.log(result1);
+
+        // Determine the URL based on the network environment
+        const acd = process.env.DFX_NETWORK;
+        console.log(acd);
+
+        if (acd === "local") {
+          const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+          console.log("NFT URL (local):", url);
+          imageurlchange(url);
+        } else if (acd === "ic") {
+          const url = `https://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.raw.icp0.io/?imgid=${id}`;
+          console.log("NFT URL (IC):", url);
+          imageurlchange(url);
+        }
+      } catch (error) {
+        console.error("Error uploading Base64 file:", error);
+      }
+    }
+  };
+
+  const createExtData = async (name, description, collColor, base64String) => {
     let n = nftCardsList.length;
     settotalnft(n);
+    const collectionImageURL = await UploadedNftImageusingBase64(base64String);
     try {
       const metadata = JSON.stringify({
         description,
@@ -172,7 +281,7 @@ const CreateCollection = () => {
       console.log(name, metadata, "calling collection creation");
       const report = await backendActor?.createExtCollection(
         name,
-        "base64String",
+        collectionImageURL,
         metadata
       );
       console.log(report);
@@ -211,17 +320,28 @@ const CreateCollection = () => {
     newtype,
     nftSeason,
     // nftFullImage,
-    imageurl1,
-    imageurl2,
-    imageurl3,
-    imageurl4
+    nftimageHeadHDblob,
+    nftimageFullHDblob,
+    nftimageHeadSDblob,
+    nftimageFullSDblob
   ) => {
+    const imageurl1 = await UploadedNftImageusingBase64(nftimageHeadHDblob);
+    const imageurl2 = await UploadedNftImageusingBase64(nftimageFullHDblob);
+    var imageurl3 = "";
+    if (nftimageHeadSDblob) {
+      imageurl3 = await UploadedNftImageusingBase64(nftimageHeadSDblob);
+    }
+    var imageurl4 = "";
+    if (nftimageFullSDblob) {
+      imageurl4 = await UploadedNftImageusingBase64(nftimageFullSDblob);
+    }
     try {
       console.log("in mint", answ);
       const principalString = answ;
       const principal = Principal.fromText(principalString);
       const date = new Date();
       const formattedDate = date.toISOString();
+
       const metadata = JSON.stringify({
         nftType,
         standard: "EXT V2",
@@ -249,7 +369,7 @@ const CreateCollection = () => {
         nftname,
         nftdescription,
         "thumbnail",
-        "nftimage",
+        "imageurl1",
         metadataContainer ? [metadataContainer] : [],
         Number(nftquantity)
       );
@@ -322,7 +442,7 @@ const CreateCollection = () => {
     }
   };
 
-  const getAddedNftDetails = (nftDetails) => {
+  const getAddedNftDetails = async (nftDetails) => {
     setNftCardsList([...nftCardsList, nftDetails]);
 
     setnfttype(nftDetails.nftType);
@@ -330,8 +450,12 @@ const CreateCollection = () => {
     setnftquantity(nftDetails.nftQuantity);
     setnftprice(nftDetails.nftPrice);
     setnftdescription(nftDetails.nftDescription);
-    // setnftimage(nftDetails.nftImage);
+    setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
+    const image1 = await UploadedNftImageusingBase64(nftDetails.nftImage);
+    const image2 = await UploadedNftImageusingBase64(nftDetails.nftFullImage);
+    console.log(image1);
+    console.log(image2);
   };
 
   const getUpdatedNftDetails = (nftDetails) => {
@@ -351,7 +475,7 @@ const CreateCollection = () => {
     setnftquantity(nftDetails.nftQuantity);
     setnftprice(nftDetails.nftPrice);
     setnftdescription(nftDetails.nftDescription);
-    // setnftimage(nftDetails.nftImage);
+    setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
   };
 
@@ -375,9 +499,9 @@ const CreateCollection = () => {
     try {
       const answ = await createExtData(
         name,
-
         description,
-        collColor
+        collColor,
+        base64String
       );
       console.log(answ);
       if (answ instanceof Error) {
@@ -408,10 +532,10 @@ const CreateCollection = () => {
               val.newtype,
               val.nftSeason,
               // val.nftFullImage,
-              val.imageurl1,
-              val.imageurl2,
-              val.imageurl3,
-              val.imageurl4
+              val.nftImage,
+              val.nftFullImage,
+              val.nftImageSD,
+              val.nftFullImageSD
             );
             console.log(mintResult, "mintResult");
             if (mintResult instanceof Error) {
@@ -564,8 +688,8 @@ const CreateCollection = () => {
                           Logo
                         </span>
                         <LogoImageUploader
-                          // captureUploadedFiles={handleFiles}
-                          captureuploadedurl={setcollectionImageURL}
+                          captureUploadedbloburl={handleFiles}
+                          // captureuploadedurl={setcollectionImageURL}
                         />
                       </label>
                     </div>

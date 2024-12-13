@@ -4,7 +4,7 @@ import { RxCross2 } from "react-icons/rx";
 import Skeleton from "react-loading-skeleton";
 import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler";
 
-function LogoImageUploader({ captureuploadedurl }) {
+function LogoImageUploader({ captureUploadedbloburl }) {
   const [files, setFiles] = useState();
   const [previews, setPreviews] = useState();
   const [hideUpload, setHideUpload] = useState(false);
@@ -20,7 +20,11 @@ function LogoImageUploader({ captureuploadedurl }) {
     );
     setPreviews(objectUrls);
     setFileType("file");
-    UploadedNftImage(objectUrls);
+    captureUploadedbloburl(file);
+    // UploadedNftImage(objectUrls);
+    // // console.log(files);
+    // console.log(objectUrls);
+
     // Cleanup function to revoke all object URLs and free memory
     return () => {
       objectUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -46,49 +50,49 @@ function LogoImageUploader({ captureuploadedurl }) {
     // }
   };
 
-  const UploadedNftImage = async (captureImage) => {
-    if (BeGod_assethandler) {
-      try {
-        console.log(captureImage);
+  // const UploadedNftImage = async (captureImage) => {
+  //   if (BeGod_assethandler) {
+  //     try {
+  //       console.log(captureImage);
 
-        const id = Date.now().toString();
-        const response = await fetch(captureImage);
-        const blob = await response.blob();
+  //       const id = Date.now().toString();
+  //       const response = await fetch(captureImage);
+  //       const blob = await response.blob();
 
-        // Step 2: Convert Blob to ArrayBuffer
-        const arrayBuffer = await blob.arrayBuffer();
+  //       // Step 2: Convert Blob to ArrayBuffer
+  //       const arrayBuffer = await blob.arrayBuffer();
 
-        const result1 = await BeGod_assethandler?.uploadImg(id, [
-          ...new Uint8Array(arrayBuffer),
-        ]);
-        console.log(result1);
+  //       const result1 = await BeGod_assethandler?.uploadImg(id, [
+  //         ...new Uint8Array(arrayBuffer),
+  //       ]);
+  //       console.log(result1);
 
-        // //return the url
-        const acd = process.env.DFX_NETWORK;
-        console.log(acd);
-        if (acd == "local") {
-          const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
-          console.log("nft url", url);
-          captureuploadedurl(url);
-        } else if (acd === "ic") {
-          const url = `https://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.raw.icp0.io/?imgid=${id}`;
-          console.log("nft url", url);
-          captureuploadedurl(url);
-        }
+  //       // //return the url
+  //       const acd = process.env.DFX_NETWORK;
+  //       console.log(acd);
+  //       if (acd == "local") {
+  //         const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+  //         console.log("nft url", url);
+  //         captureuploadedurl(url);
+  //       } else if (acd === "ic") {
+  //         const url = `https://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.raw.icp0.io/?imgid=${id}`;
+  //         console.log("nft url", url);
+  //         captureuploadedurl(url);
+  //       }
 
-        // const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+  //       // const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
 
-        // //return the url
-        // console.log("nft url", url);
-        // captureuploadedurl(url);
-        // setimageurl(url);
-        // imageurlchange(url);
-        // console.log(imageurl);
-      } catch (error) {
-        console.error("Error fetching uploadimg:", error);
-      }
-    }
-  };
+  //       // //return the url
+  //       // console.log("nft url", url);
+  //       // captureuploadedurl(url);
+  //       // setimageurl(url);
+  //       // imageurlchange(url);
+  //       // console.log(imageurl);
+  //     } catch (error) {
+  //       console.error("Error fetching uploadimg:", error);
+  //     }
+  //   }
+  // };
 
   const toggleInputHide = () => {
     setHideUpload(!hideUpload);

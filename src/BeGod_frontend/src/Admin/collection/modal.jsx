@@ -33,9 +33,9 @@ const Modal = (props) => {
   const [nftDescription, setNftDescription] = useState(
     type === "edit" ? cardDetails.nftDescription : ""
   );
-  // const [nftImage, setNftImage] = useState(
-  //   type === "edit" ? cardDetails.nftImage : ""
-  // );
+  const [nftImage, setNftImage] = useState(
+    type === "edit" ? cardDetails.nftImage : ""
+  );
   // const [nftImageURL, setNftImageURL] = useState(
   //   type === "edit" ? cardDetails.nftImageURL : ""
   // );
@@ -52,15 +52,19 @@ const Modal = (props) => {
     type === "edit" ? cardDetails.nftSeason : "Golden Age"
   );
 
-  // const [nftFullImage, setNftFullImage] = useState(
-  //   type === "edit" ? cardDetails.nftFullImage : ""
-  // );
+  const [nftFullImage, setNftFullImage] = useState(
+    type === "edit" ? cardDetails.nftFullImage : ""
+  );
+  const [nftFullImageSD, setNftFullImageSD] = useState(
+    type === "edit" ? cardDetails.nftFullImageSD : ""
+  );
+  const [nftImageSD, setNftImageSD] = useState(
+    type === "edit" ? cardDetails.nftImageSD : ""
+  );
 
   // const [nftFullImageURL, setNftFullImageURL] = useState("");
 
   const [hideImageUpload, updateHideImageUploadStatus] = useState(false);
-  // const [hideImageUpload, setHideImageUpload] = useState(true);
-  // const updateHideImageUploadStatus = (status) => setHideImageUpload(status);
 
   const [imageurl1, setimageurl1] = useState(
     type === "edit" ? cardDetails.imageurl1 : ""
@@ -85,13 +89,13 @@ const Modal = (props) => {
       nftQuantity &&
       nftPrice != 0 &&
       nftDescription &&
-      // nftImage &&
+      nftImage &&
       // nftImageURL &&
       nftcolor &&
       // arstistname &&
       newtype &&
       nftSeason &&
-      // nftFullImage &&
+      nftFullImage &&
       imageurl1 &&
       imageurl2
     ) {
@@ -100,7 +104,7 @@ const Modal = (props) => {
         nftName,
         nftType,
         nftQuantity,
-        // nftImage,
+        nftImage,
         // nftImageURL,
         nftPrice,
         nftDescription,
@@ -108,7 +112,9 @@ const Modal = (props) => {
         arstistname,
         newtype,
         nftSeason,
-        // nftFullImage,
+        nftFullImage,
+        nftFullImageSD,
+        nftImageSD,
         imageurl1,
         imageurl2,
         imageurl3,
@@ -132,13 +138,13 @@ const Modal = (props) => {
       nftQuantity &&
       nftPrice &&
       nftDescription &&
-      // nftImage &&
+      nftImage &&
       // nftImageURL &&
       nftcolor &&
       // arstistname &&
       newtype &&
       nftSeason &&
-      // nftFullImage &&
+      nftFullImage &&
       imageurl1 &&
       imageurl2
     ) {
@@ -147,7 +153,7 @@ const Modal = (props) => {
         nftName,
         nftType,
         nftQuantity,
-        // nftImage,
+        nftImage,
         // nftImageURL,
         nftPrice,
         nftDescription,
@@ -155,7 +161,9 @@ const Modal = (props) => {
         arstistname,
         newtype,
         nftSeason,
-        // nftFullImage,
+        nftFullImage,
+        nftFullImageSD,
+        nftImageSD,
         imageurl1,
         imageurl2,
         imageurl3,
@@ -170,32 +178,32 @@ const Modal = (props) => {
     }
   };
 
-  // const captureUploadedNftImageFile = async (files) => {
-  //   const file = files[0];
-  //   if (file) {
-  //     try {
-  //       let options = {
-  //         maxSizeMB: 0.06,
-  //         maxWidthOrHeight: 300,
-  //         useWebWorker: true,
-  //       };
-  //       let compressedFile = await imageCompression(file, options);
+  const captureUploadedNftImageHDFile = async (files) => {
+    const file = files[0];
+    if (file) {
+      try {
+        // let options = {
+        //   maxSizeMB: 0.06,
+        //   maxWidthOrHeight: 300,
+        //   useWebWorker: true,
+        // };
+        // let compressedFile = await imageCompression(file, options);
 
-  //       while (compressedFile.size > 60 * 1024) {
-  //         options.maxSizeMB *= 0.9;
-  //         compressedFile = await imageCompression(file, options);
-  //       }
+        // while (compressedFile.size > 60 * 1024) {
+        //   options.maxSizeMB *= 0.9;
+        //   compressedFile = await imageCompression(file, options);
+        // }
 
-  //       console.log("Compressed file size:", compressedFile.size);
+        // console.log("Compressed file size:", compressedFile.size);
 
-  //       const reader = new FileReader();
-  //       reader.onloadend = () => setNftImage(reader.result);
-  //       reader.readAsDataURL(compressedFile);
-  //     } catch (error) {
-  //       console.error("Error during file compression:", error);
-  //     }
-  //   }
-  // };
+        const reader = new FileReader();
+        reader.onloadend = () => setNftImage(reader.result);
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Error in NFT file:", error);
+      }
+    }
+  };
 
   // const captureUploadedNftImage = (pic) => {
   //   setNftImageURL(pic);
@@ -203,32 +211,86 @@ const Modal = (props) => {
   //   // console.log("img", files);
   // };
 
-  // const captureUploadedNftFullImageFile = async (files) => {
-  //   const file = files[0];
-  //   if (file) {
-  //     try {
-  //       let options = {
-  //         maxSizeMB: 0.06,
-  //         maxWidthOrHeight: 200,
-  //         useWebWorker: true,
-  //       };
-  //       let compressedFile = await imageCompression(file, options);
+  const captureUploadedNftFullImageHDFile = async (files) => {
+    const file = files[0];
+    if (file) {
+      try {
+        // let options = {
+        //   maxSizeMB: 0.06,
+        //   maxWidthOrHeight: 200,
+        //   useWebWorker: true,
+        // };
+        // let compressedFile = await imageCompression(file, options);
 
-  //       while (compressedFile.size > 60 * 1024) {
-  //         options.maxSizeMB *= 0.9;
-  //         compressedFile = await imageCompression(file, options);
-  //       }
+        // while (compressedFile.size > 60 * 1024) {
+        //   options.maxSizeMB *= 0.9;
+        //   compressedFile = await imageCompression(file, options);
+        // }
 
-  //       console.log("Compressed file size:", compressedFile.size);
+        // console.log("Compressed file size:", compressedFile.size);
 
-  //       const reader = new FileReader();
-  //       reader.onloadend = () => setNftFullImage(reader.result);
-  //       reader.readAsDataURL(compressedFile);
-  //     } catch (error) {
-  //       console.error("Error during file compression:", error);
-  //     }
-  //   }
-  // };
+        const reader = new FileReader();
+        reader.onloadend = () => setNftFullImage(reader.result);
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Error in NFT file:", error);
+      }
+    }
+  };
+
+  const captureUploadedNftImageSDFile = async (files) => {
+    const file = files[0];
+    if (file) {
+      try {
+        // let options = {
+        //   maxSizeMB: 0.06,
+        //   maxWidthOrHeight: 300,
+        //   useWebWorker: true,
+        // };
+        // let compressedFile = await imageCompression(file, options);
+
+        // while (compressedFile.size > 60 * 1024) {
+        //   options.maxSizeMB *= 0.9;
+        //   compressedFile = await imageCompression(file, options);
+        // }
+
+        // console.log("Compressed file size:", compressedFile.size);
+
+        const reader = new FileReader();
+        reader.onloadend = () => setNftImageSD(reader.result);
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Error in NFT file:", error);
+      }
+    }
+  };
+
+  const captureUploadedNftFullImageSDFile = async (files) => {
+    const file = files[0];
+    if (file) {
+      try {
+        // let options = {
+        //   maxSizeMB: 0.06,
+        //   maxWidthOrHeight: 200,
+        //   useWebWorker: true,
+        // };
+        // let compressedFile = await imageCompression(file, options);
+
+        // while (compressedFile.size > 60 * 1024) {
+        //   options.maxSizeMB *= 0.9;
+        //   compressedFile = await imageCompression(file, options);
+        // }
+
+        // console.log("Compressed file size:", compressedFile.size);
+
+        const reader = new FileReader();
+        reader.onloadend = () => setNftFullImage(reader.result);
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Error in NFT file:", error);
+      }
+    }
+  };
 
   // const captureUploadedNftFullImage = (pic) => {
   //   setNftFullImageURL(pic);
@@ -381,13 +443,13 @@ const Modal = (props) => {
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 // captureUploadedNftImage={captureUploadedNftImage}
-                // captureUploadedNftImageFile={captureUploadedNftImageFile}
+                captureUploadedNftImageFile={captureUploadedNftImageHDFile}
                 imageurlchange={setimageurl1}
               />
             ) : (
               <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
                 <img
-                  src={imageurl1}
+                  src={nftImage}
                   alt="Selected"
                   className="object-cover w-full h-full rounded-lg"
                 />
@@ -408,13 +470,13 @@ const Modal = (props) => {
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 // captureUploadedNftImage={captureUploadedNftFullImage}
-                // captureUploadedNftImageFile={captureUploadedNftFullImageFile}
+                captureUploadedNftImageFile={captureUploadedNftFullImageHDFile}
                 imageurlchange={setimageurl2}
               />
             ) : (
               <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
                 <img
-                  src={imageurl2}
+                  src={nftFullImage}
                   alt="Selected"
                   className="object-cover w-full h-full rounded-lg"
                 />
@@ -435,13 +497,13 @@ const Modal = (props) => {
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 // captureUploadedNftImage={value}
-                // captureUploadedNftImageFile={value}
+                captureUploadedNftImageFile={captureUploadedNftImageSDFile}
                 imageurlchange={setimageurl3}
               />
-            ) : imageurl3 ? ( // Check if imageurl3 is available
+            ) : nftImageSD ? ( // Check if nftImageSD is available
               <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
                 <img
-                  src={imageurl3}
+                  src={nftImageSD}
                   alt="Selected"
                   className="object-cover w-full h-full rounded-lg"
                 />
@@ -455,7 +517,7 @@ const Modal = (props) => {
             ) : (
               <ImageUploader
                 // captureUploadedNftImage={value}
-                // captureUploadedNftImageFile={value}
+                captureUploadedNftImageFile={captureUploadedNftImageSDFile}
                 imageurlchange={setimageurl3}
               />
             )}
@@ -468,13 +530,13 @@ const Modal = (props) => {
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 // captureUploadedNftImage={value}
-                // captureUploadedNftImageFile={value}
+                captureUploadedNftImageFile={captureUploadedNftFullImageSDFile}
                 imageurlchange={setimageurl4}
               />
-            ) : imageurl4 ? ( // Check if imageurl3 is available
+            ) : nftFullImageSD ? ( // Check if nftFullImageSD is available
               <div className="relative w-[50px] h-[50px] md:h-[70px] m-0">
                 <img
-                  src={imageurl4}
+                  src={nftFullImageSD}
                   alt="Selected"
                   className="object-cover w-full h-full rounded-lg"
                 />
@@ -488,7 +550,7 @@ const Modal = (props) => {
             ) : (
               <ImageUploader
                 // captureUploadedNftImage={value}
-                // captureUploadedNftImageFile={value}
+                captureUploadedNftImageFile={captureUploadedNftFullImageSDFile}
                 imageurlchange={setimageurl4}
               />
             )}
