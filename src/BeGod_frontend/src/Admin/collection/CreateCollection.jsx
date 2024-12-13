@@ -452,10 +452,10 @@ const CreateCollection = () => {
     setnftdescription(nftDetails.nftDescription);
     setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
-    const image1 = await UploadedNftImageusingBase64(nftDetails.nftImage);
-    const image2 = await UploadedNftImageusingBase64(nftDetails.nftFullImage);
-    console.log(image1);
-    console.log(image2);
+    // const image1 = await UploadedNftImageusingBase64(nftDetails.nftImage);
+    // const image2 = await UploadedNftImageusingBase64(nftDetails.nftFullImage);
+    // console.log(image1);
+    // console.log(image2);
   };
 
   const getUpdatedNftDetails = (nftDetails) => {
