@@ -6,10 +6,10 @@ import {
   createActor,
   BeGod_backend,
 } from "../../../declarations/BeGod_backend";
-import { createActor as createLedgerActor } from "../../../declarations/icp_ledger_canister/index";
+import { createActor as createLedgerActor } from "../../../declarations/icrc2_token_canister/index";
 import { PlugLogin, StoicLogin, NFIDLogin, IdentityLogin } from "ic-auth";
 import { idlFactory } from "../../../declarations/BeGod_backend/index";
-import { idlFactory as ledgerIdlFactory } from "../../../declarations/icp_ledger_canister/index";
+import { idlFactory as ledgerIdlFactory } from "../../../declarations/icrc2_token_canister/index";
 import { useDispatch } from "react-redux";
 import { setUser } from "../redux/authSlice";
 import { useNavigate } from "react-router-dom";
