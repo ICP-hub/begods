@@ -20,7 +20,7 @@ function LogoImageUploader({ captureUploadedbloburl }) {
     );
     setPreviews(objectUrls);
     setFileType("file");
-    captureUploadedbloburl(file);
+    captureUploadedbloburl(files);
     // UploadedNftImage(objectUrls);
     // // console.log(files);
     // console.log(objectUrls);
@@ -107,7 +107,6 @@ function LogoImageUploader({ captureUploadedbloburl }) {
           id={Date.now()}
           type={fileType}
           accept="image/jpg, image/jpeg, image/png"
-          multiple
           onChange={(e) => {
             handleFileChange(e);
             toggleInputHide();
