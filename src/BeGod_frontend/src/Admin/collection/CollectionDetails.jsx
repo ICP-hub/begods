@@ -191,11 +191,55 @@ function CollectionDetails() {
     fetchNFTs();
   }, [currentpage]);
 
+  const UploadedNftImageusingBase64 = async (base64File) => {
+    if (BeGod_assethandler) {
+      try {
+        console.log(base64File);
+
+        // Generate a unique ID for the image
+        const id = Date.now().toString();
+
+        // Convert Base64 string to ArrayBuffer
+        const binaryString = atob(base64File.split(",")[1]); // Remove the metadata prefix if present
+        const length = binaryString.length;
+        const arrayBuffer = new Uint8Array(length);
+
+        for (let i = 0; i < length; i++) {
+          arrayBuffer[i] = binaryString.charCodeAt(i);
+        }
+
+        // Upload the image to the canister
+        const result1 = await BeGod_assethandler?.uploadImg(id, [
+          ...arrayBuffer,
+        ]);
+        console.log(result1);
+
+        // Determine the URL based on the network environment
+        const acd = process.env.DFX_NETWORK;
+        console.log(acd);
+
+        if (acd === "local") {
+          const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+          console.log("NFT URL (local):", url);
+          return url;
+          // imageurlchange(url);
+        } else if (acd === "ic") {
+          const url = `https://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.raw.icp0.io/?imgid=${id}`;
+          console.log("NFT URL (IC):", url);
+          // imageurlchange(url);
+          return url;
+        }
+      } catch (error) {
+        console.error("Error uploading Base64 file:", error);
+      }
+    }
+  };
+
   const mintNFT = async (
     principalStringg,
     nftname,
     nftdescription,
-    // nftimage,
+    nftimageHeadHDblob,
     nftquantity,
     nftcolor,
     nftprice,
@@ -203,12 +247,22 @@ function CollectionDetails() {
     artistname,
     newtype,
     nftSeason,
-    imageurl1,
-    imageurl2,
-    imageurl3,
-    imageurl4
+    nftimageFullHDblob,
+    nftimageHeadSDblob,
+    nftimageFullSDblob
   ) => {
     try {
+      const imageurl1 = await UploadedNftImageusingBase64(nftimageHeadHDblob);
+      const imageurl2 = await UploadedNftImageusingBase64(nftimageFullHDblob);
+      var imageurl3 = "";
+      if (nftimageHeadSDblob) {
+        imageurl3 = await UploadedNftImageusingBase64(nftimageHeadSDblob);
+      }
+      var imageurl4 = "";
+      if (nftimageFullSDblob) {
+        imageurl4 = await UploadedNftImageusingBase64(nftimageFullSDblob);
+      }
+
       // console.log("in mint", principalStringg);
       const principalString = principalStringg;
       const principal = Principal.fromText(principalString);
@@ -349,7 +403,7 @@ function CollectionDetails() {
         principalStringg,
         nftDetails.nftName,
         nftDetails.nftDescription,
-        // nftDetails.nftImage,
+        nftDetails.nftImage,
         nftDetails.nftQuantity,
         nftDetails.nftcolor,
         nftDetails.nftPrice,
@@ -357,10 +411,13 @@ function CollectionDetails() {
         nftDetails.artistname,
         nftDetails.newtype,
         nftDetails.nftSeason,
-        nftDetails.imageurl1,
-        nftDetails.imageurl2,
-        nftDetails.imageurl3,
-        nftDetails.imageurl4
+        nftDetails.nftFullImage,
+        nftDetails.nftImageSD,
+        nftDetails.nftFullImageSD
+        // nftDetails.imageurl1,
+        // nftDetails.imageurl2,
+        // nftDetails.imageurl3,
+        // nftDetails.imageurl4
       );
 
       if (mintResult instanceof Error) {
