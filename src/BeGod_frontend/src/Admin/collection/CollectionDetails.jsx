@@ -17,6 +17,7 @@ import { LuFilter } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { Box, Button } from "@chakra-ui/react";
+import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler";
 
 const cardTypeList = [
   {
@@ -397,6 +398,7 @@ function CollectionDetails() {
     setnftdescription(nftDetails.nftDescription);
     // setnftimage(nftDetails.nftImage);
     setnftcolor(nftDetails.nftcolor);
+    console.log(nftDetails);
 
     try {
       const mintResult = await mintNFT(
