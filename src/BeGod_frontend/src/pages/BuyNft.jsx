@@ -70,6 +70,9 @@ const BuyNft = () => {
     setbuyPopup(!buyPopup);
     setBuyingStatus(buyingStatus.payment);
   };
+  const togglebuy = () => {
+    setbuyPopup(!buyPopup);
+  };
 
   const sendBalance = async (purchaseTxnId, UserAccountId, Price) => {
     const transactionArg = {
@@ -767,8 +770,14 @@ const BuyNft = () => {
                   </div>
                 )}
                 {showError.show && (
-                  <div className=" flex flex-col items-center justify-center">
-                    <h1 className="text-3xl text-red-500">Error !</h1>
+                  <div className="relative flex flex-col items-center justify-center">
+                    <button
+                      className="absolute top-2 right-2 text-[#ffffff] z-10"
+                      onClick={() => togglebuy()}
+                    >
+                      <RxCross2 size={20} />
+                    </button>
+                    <h1 className="text-3xl text-red-500">Error!</h1>
                     <p className="my-2 text-xl">{showError.msg}</p>
                   </div>
                 )}
