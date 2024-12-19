@@ -385,11 +385,11 @@ const CreateCollection = () => {
       const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
       console.log(es8_price, "price");
       if (result && result.length > 0) {
-        result.map((val, key) => {
+        for (const val of result) {
           // console.log(key, "in mint");
           // console.log(val);
           getNftTokenId(answ, val[1], es8_price);
-        });
+        }
       }
 
       // if (result && result.length > 0) {
