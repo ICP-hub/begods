@@ -224,7 +224,7 @@ const CreateCollection = () => {
   const UploadedNftImageusingBase64 = async (base64File) => {
     if (BeGod_assethandler) {
       try {
-        console.log(base64File);
+        // console.log(base64File);
 
         // Generate a unique ID for the image
         const id = Date.now().toString();
@@ -377,32 +377,40 @@ const CreateCollection = () => {
         metadataContainer ? [metadataContainer] : [],
         Number(nftquantity)
       );
-      setDone((done) => done + 1);
-
-      if (result && result.length > 0) {
-        console.log(result, "NFT mint data");
-        const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
-        console.log(es8_price, "price");
-
-        let flag = true;
-
-        for (const val of result) {
-          if (flag) {
-            try {
-              flag = false;
-              await getNftTokenId(answ, val[1], es8_price);
-              flag = true;
-            } catch (err) {
-              console.error("Error in getNftTokenId inside the mintnft:", err);
-              throw err;
-            }
-          }
-        }
-      } else {
-        throw new Error("Minting failed");
+      if (totalnft != 1) {
+        setDone((done) => done + 1);
       }
+
+      console.log(result, "nft mint data");
+      const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
+      console.log(es8_price, "price");
+      if (result && result.length > 0) {
+        for (const val of result) {
+          // console.log(key, "in mint");
+          // console.log(val);
+          getNftTokenId(answ, val[1], es8_price);
+        }
+      }
+
+      // if (result && result.length > 0) {
+      //   await Promise.all(
+      //     result.map((val) => getNftTokenId(answ, val[1], es8_price))
+      //   );
+      // } else {
+      //   throw new Error("Minting failed");
+      // }
+
+      // if (result) {
+      //   setTokenId(result[0]);
+      //   console.log("NFT Minted: ", result[0]);
+      //   await getNftTokenId(answ, result[0]);
+      // } else {
+      //   throw new Error("Error in mintNFT");
+      //   toast.error("Error in mintNFT");
+      // }
     } catch (error) {
-      console.error("Error minting NFT:", error.message);
+      console.error("Error minting NFT:", error);
+      toast.error("Error minting NFT");
       return error; // Return error
     }
   };
@@ -416,7 +424,7 @@ const CreateCollection = () => {
     } catch (error) {
       console.error("Error fetching NFT token ID:", error);
       toast.error("Error in getNftTokenId");
-      throw error; // Rethrow error to handle it in the parent function
+      return error;
     }
   };
 
@@ -432,17 +440,17 @@ const CreateCollection = () => {
         price: priceE8s ? [priceE8s] : [],
       };
       const result = await backendActor?.listprice(principal, request);
-      console.log("listprice called");
-
+      // console.log("lisprice called", done);
       if (result) {
         console.log("List Price Result:", result);
       } else {
         throw new Error("listprice is not working");
+        // toast.error("listprice is not working");
       }
     } catch (error) {
       console.error("Error listing price:", error);
       toast.error("Error listing price");
-      throw error;
+      return error; // Return error
     }
   };
 
