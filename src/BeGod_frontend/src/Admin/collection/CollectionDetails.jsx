@@ -309,9 +309,12 @@ function CollectionDetails() {
       //   });
       // }
       if (result && result.length > 0) {
-        await Promise.all(
-          result.map((val) => getNftTokenId(principal, val[1], es8_price))
-        );
+        setTimeout(async () => {
+          await Promise.all(
+            result.map((val) => getNftTokenId(principal, val[1], es8_price))
+          );
+        },1000)
+       
       } else {
         throw new Error("Minting failed");
       }
