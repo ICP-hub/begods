@@ -10,7 +10,7 @@ function ImageUploader(props) {
   const [fileType, setFileType] = useState("file");
   const {
     // captureUploadedNftImage,
-    // captureUploadedNftImageFile,
+    captureUploadedNftImageFile,
     imageurlchange,
   } = props;
 
@@ -21,9 +21,12 @@ function ImageUploader(props) {
       URL.createObjectURL(file)
     );
     setPreviews(objectUrls);
-    // captureUploadedNftImageFile(files);
+    captureUploadedNftImageFile(files);
+    imageurlchange(objectUrls);
+    console.log(files);
+    console.log(objectUrls);
 
-    UploadedNftImage(objectUrls);
+    // UploadedNftImage(objectUrls);
     // Cleanup function to revoke object URLs and free memory
     return () => {
       objectUrls.forEach((url) => URL.revokeObjectURL(url));
@@ -50,43 +53,43 @@ function ImageUploader(props) {
     setFiles();
   };
 
-  const UploadedNftImage = async (captureImage) => {
-    if (BeGod_assethandler) {
-      try {
-        console.log(captureImage);
+  // const UploadedNftImage = async (captureImage) => {
+  //   if (BeGod_assethandler) {
+  //     try {
+  //       console.log(captureImage);
 
-        const id = Date.now().toString();
-        const response = await fetch(captureImage);
-        const blob = await response.blob();
+  //       const id = Date.now().toString();
+  //       const response = await fetch(captureImage);
+  //       const blob = await response.blob();
 
-        const arrayBuffer = await blob.arrayBuffer();
+  //       const arrayBuffer = await blob.arrayBuffer();
 
-        const result1 = await BeGod_assethandler?.uploadImg(id, [
-          ...new Uint8Array(arrayBuffer),
-        ]);
-        console.log(result1);
+  //       const result1 = await BeGod_assethandler?.uploadImg(id, [
+  //         ...new Uint8Array(arrayBuffer),
+  //       ]);
+  //       console.log(result1);
 
-        // //return the url
-        const acd = process.env.DFX_NETWORK;
-        console.log(acd);
-        if (acd == "local") {
-          const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
-          console.log("nft url", url);
-          imageurlchange(url);
-        } else if (acd === "ic") {
-          const url = `http://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.icp0.io/?&imgid=${id}`;
-          console.log("nft url", url);
-          imageurlchange(url);
-        }
-        // const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
-        // //return the url
-        // console.log("nft url", url);
-        // imageurlchange(url);
-      } catch (error) {
-        console.error("Error fetching uploading:", error);
-      }
-    }
-  };
+  //       // //return the url
+  //       const acd = process.env.DFX_NETWORK;
+  //       console.log(acd);
+  //       if (acd == "local") {
+  //         const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+  //         console.log("nft url", url);
+  //         imageurlchange(url);
+  //       } else if (acd === "ic") {
+  //         const url = `https://${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}.raw.icp0.io/?imgid=${id}`;
+  //         console.log("nft url", url);
+  //         imageurlchange(url);
+  //       }
+  //       // const url = `http://127.0.0.1:4943/?canisterId=${process.env.CANISTER_ID_BEGOD_ASSETHANDLER}&imgid=${id}`;
+  //       // //return the url
+  //       // console.log("nft url", url);
+  //       // imageurlchange(url);
+  //     } catch (error) {
+  //       console.error("Error fetching uploading:", error);
+  //     }
+  //   }
+  // };
 
   return (
     <div className="mt-1">
