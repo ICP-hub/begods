@@ -439,7 +439,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Head HD Image
+            Head Image
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 // captureUploadedNftImage={captureUploadedNftImage}
@@ -466,7 +466,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Full HD Image
+            Full Image
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 // captureUploadedNftImage={captureUploadedNftFullImage}
@@ -493,7 +493,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Head SD Image (Optional)
+            Head HD Image (Optional)
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 // captureUploadedNftImage={value}
@@ -526,7 +526,7 @@ const Modal = (props) => {
 
         <div className="mt-1">
           <label className="w-[100%] h-[60px] md:h-[86px] text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[18px] leading-[25px]">
-            Full SD Image (Optional)
+            Full HD Image (Optional)
             {type === "add" || hideImageUpload ? (
               <ImageUploader
                 // captureUploadedNftImage={value}

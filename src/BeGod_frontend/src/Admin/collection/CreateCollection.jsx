@@ -356,6 +356,7 @@ const CreateCollection = () => {
         arstistname,
         newtype,
         nftSeason,
+        nftquantity,
         // nftFullImage,
         imageurl1,
         imageurl2,
@@ -386,14 +387,14 @@ const CreateCollection = () => {
       console.log(es8_price, "price");
       console.log(result, "nft mint data result");
       if (result && result.length > 0) {
-        console.log(result,'result of data for minting');
+        console.log(result, "result of data for minting");
         for (const val of result) {
           // console.log(key, "in mint");
           // console.log(val);
-          setTimeout(() => {
-            getNftTokenId(answ, val[1], es8_price);
-          }, 1000);
-          
+          listPrice(answ, val[1], es8_price);
+          // setTimeout(() => {
+          //   getNftTokenId(answ, val[1], es8_price);
+          // }, 1000);
         }
       }
 
@@ -420,21 +421,31 @@ const CreateCollection = () => {
     }
   };
 
-  const getNftTokenId = async (answ, nftIdentifier, nftprice) => {
-    try {
-      console.log(answ, nftIdentifier, nftprice);
-      const principal = Principal.fromText(answ);
-      const res = await listPrice(principal, nftIdentifier, nftprice);
-      console.log(res, "res data");
-    } catch (error) {
-      console.error("Error fetching NFT token ID:", error);
-      toast.error("Error in getNftTokenId");
-      return error;
-    }
-  };
+  // const getNftTokenId = async (answ, nftIdentifier, nftprice) => {
+  //   try {
+  //     console.log(answ, nftIdentifier, nftprice);
 
-  const listPrice = async (principal, tokenidentifier, price) => {
+  //     const principal = Principal.fromText(answ);
+
+  //     setTimeout(async () => {
+  //       try {
+  //         const res = await listPrice(principal, nftIdentifier, nftprice);
+  //         console.log(res, "res data"); // Moved inside the setTimeout function
+  //       } catch (error) {
+  //         console.error("Error in listPrice:", error);
+  //         toast.error("Error in listPrice");
+  //       }
+  //     }, 1000);
+  //   } catch (error) {
+  //     console.error("Error fetching NFT token ID:", error);
+  //     toast.error("Error in getNftTokenId");
+  //     return error;
+  //   }
+  // };
+
+  const listPrice = async (answ, tokenidentifier, price) => {
     try {
+      const principal = Principal.fromText(answ);
       const finalPrice = price;
       console.log("listprice calling");
       const priceE8s = finalPrice ? finalPrice : null;
@@ -588,7 +599,7 @@ const CreateCollection = () => {
       if (!hasError) {
         setTimeout(() => {
           navigate("/admin/collection");
-        }, 3000);
+        }, 5000);
       }
     } catch (error) {
       if (!errorShown) {
