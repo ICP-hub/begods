@@ -290,34 +290,37 @@ function CollectionDetails() {
         json: metadata,
       };
 
-      const result = await backendActor?.mintExtNonFungible(
+      const es8_price = parseInt(parseFloat(nftprice) * 100000000);
+
+      const result = await backendActor?.mintExtNonFungible2(
         principal,
         nftname,
         nftdescription,
         "thumbnail",
         "nftimage",
         metadataContainer ? [metadataContainer] : [],
-        Number(nftquantity)
+        Number(nftquantity),
+        es8_price ? [es8_price] : []
       );
 
       console.log(result, "nft mint data");
-      const es8_price = parseInt(parseFloat(nftprice) * 100000000);
+      // const es8_price = parseInt(parseFloat(nftprice) * 100000000);
       // console.log(es8_price, "price");
       // if (result && result.length > 0) {
       //   result.map((val, key) => {
       //     getNftTokenId(principal, val[1], es8_price);
       //   });
       // }
-      if (result && result.length > 0) {
-        setTimeout(async () => {
-          await Promise.all(
-            result.map((val) => getNftTokenId(principal, val[1], es8_price))
-          );
-        },1000)
-       
-      } else {
-        throw new Error("Minting failed");
-      }
+      // if (result && result.length > 0) {
+      //   setTimeout(async () => {
+      //     await Promise.all(
+      //       result.map((val) => getNftTokenId(principal, val[1], es8_price))
+      //     );
+      //   },1000)
+
+      // } else {
+      //   throw new Error("Minting failed");
+      // }
     } catch (error) {
       console.error("Error minting NFT:", error);
       toast.error("Error minting NFT");
@@ -325,45 +328,45 @@ function CollectionDetails() {
     }
   };
 
-  const getNftTokenId = async (principal, nftIdentifier, nftprice) => {
-    try {
-      // console.log(principal, nftIdentifier, nftprice);
-      // const principall = Principal.fromText(principal);
-      const res = await listPrice(principal, nftIdentifier, nftprice);
-      // console.log(res, "res data");
-    } catch (error) {
-      console.error("Error fetching NFT token ID:", error);
-      toast.error("Error in getNftTokenId");
-      return error;
-    }
-  };
+  // const getNftTokenId = async (principal, nftIdentifier, nftprice) => {
+  //   try {
+  //     // console.log(principal, nftIdentifier, nftprice);
+  //     // const principall = Principal.fromText(principal);
+  //     const res = await listPrice(principal, nftIdentifier, nftprice);
+  //     // console.log(res, "res data");
+  //   } catch (error) {
+  //     console.error("Error fetching NFT token ID:", error);
+  //     toast.error("Error in getNftTokenId");
+  //     return error;
+  //   }
+  // };
 
-  const listPrice = async (principal, tokenidentifier, price) => {
-    try {
-      // console.log("called");
-      const finalPrice = price;
+  // const listPrice = async (principal, tokenidentifier, price) => {
+  //   try {
+  //     // console.log("called");
+  //     const finalPrice = price;
 
-      const priceE8s = finalPrice ? finalPrice : null;
+  //     const priceE8s = finalPrice ? finalPrice : null;
 
-      const request = {
-        token: tokenidentifier,
-        from_subaccount: [],
-        price: priceE8s ? [priceE8s] : [],
-      };
-      const result = await backendActor?.listprice(principal, request);
-      if (result) {
-        console.log("List Price Result:", result);
-        // await getListing(principal);
-      } else {
-        throw new Error("listprice is not working");
-        toast.error("listprice is not working");
-      }
-    } catch (error) {
-      console.error("Error listing price:", error);
-      toast.error("Error listing price");
-      return error; // Return error
-    }
-  };
+  //     const request = {
+  //       token: tokenidentifier,
+  //       from_subaccount: [],
+  //       price: priceE8s ? [priceE8s] : [],
+  //     };
+  //     const result = await backendActor?.listprice(principal, request);
+  //     if (result) {
+  //       console.log("List Price Result:", result);
+  //       // await getListing(principal);
+  //     } else {
+  //       throw new Error("listprice is not working");
+  //       toast.error("listprice is not working");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error listing price:", error);
+  //     toast.error("Error listing price");
+  //     return error; // Return error
+  //   }
+  // };
 
   // const getListing = async (principal) => {
   //   try {
