@@ -9,7 +9,7 @@ const NftCard = ({ id, list, collectiondata }) => {
 
   // Check if the price is a valid number and not NaN
 
-  const isValidPrice = typeof price === "number" && !isNaN(price) && price >= 0;
+  const isValidPrice = typeof price === "number" && !isNaN(price) && price > 0;
   console.log(list);
 
   // const image = list[2]?.nonfungible?.thumbnail ?? "Image not found";

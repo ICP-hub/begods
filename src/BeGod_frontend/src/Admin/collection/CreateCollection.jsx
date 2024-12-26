@@ -309,7 +309,7 @@ const CreateCollection = () => {
       return error;
     }
   };
-
+  console.log(typeof nftprice);
   const mintNFT = async (
     answ,
     nftname,
@@ -369,34 +369,37 @@ const CreateCollection = () => {
       };
       console.log(principal, nftname, nftdescription, nftimage, nftquantity);
 
-      const result = await backendActor?.mintExtNonFungible(
+      const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
+
+      const result = await backendActor?.mintExtNonFungible2(
         principal,
         nftname,
         nftdescription,
         "thumbnail",
         "imageurl1",
         metadataContainer ? [metadataContainer] : [],
-        Number(nftquantity)
+        Number(nftquantity),
+        es8_price ? [es8_price] : []
       );
       if (totalnft != 1) {
         setDone((done) => done + 1);
       }
 
       console.log(result, "nft mint data");
-      const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
-      console.log(es8_price, "price");
-      console.log(result, "nft mint data result");
-      if (result && result.length > 0) {
-        console.log(result, "result of data for minting");
-        for (const val of result) {
-          // console.log(key, "in mint");
-          // console.log(val);
-          listPrice(answ, val[1], es8_price);
-          // setTimeout(() => {
-          //   getNftTokenId(answ, val[1], es8_price);
-          // }, 1000);
-        }
-      }
+      // const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
+      // console.log(es8_price, "price");
+      // console.log(result, "nft mint data result");
+      // if (result && result.length > 0) {
+      //   console.log(result, "result of data for minting");
+      //   for (const val of result) {
+      //     // console.log(key, "in mint");
+      //     // console.log(val);
+      //     listPrice(answ, val[1], es8_price);
+      //     // setTimeout(() => {
+      //     //   getNftTokenId(answ, val[1], es8_price);
+      //     // }, 1000);
+      //   }
+      // }
 
       // if (result && result.length > 0) {
       //   await Promise.all(
@@ -443,32 +446,32 @@ const CreateCollection = () => {
   //   }
   // };
 
-  const listPrice = async (answ, tokenidentifier, price) => {
-    try {
-      const principal = Principal.fromText(answ);
-      const finalPrice = price;
-      console.log("listprice calling");
-      const priceE8s = finalPrice ? finalPrice : null;
+  // const listPrice = async (answ, tokenidentifier, price) => {
+  //   try {
+  //     const principal = Principal.fromText(answ);
+  //     const finalPrice = price;
+  //     console.log("listprice calling");
+  //     const priceE8s = finalPrice ? finalPrice : null;
 
-      const request = {
-        token: tokenidentifier,
-        from_subaccount: [],
-        price: priceE8s ? [priceE8s] : [],
-      };
-      const result = await backendActor?.listprice(principal, request);
-      // console.log("lisprice called", done);
-      if (result) {
-        console.log("List Price Result:", result);
-      } else {
-        throw new Error("listprice is not working");
-        // toast.error("listprice is not working");
-      }
-    } catch (error) {
-      console.error("Error listing price:", error);
-      toast.error("Error listing price");
-      return error; // Return error
-    }
-  };
+  //     const request = {
+  //       token: tokenidentifier,
+  //       from_subaccount: [],
+  //       price: priceE8s ? [priceE8s] : [],
+  //     };
+  //     const result = await backendActor?.listprice(principal, request);
+  //     // console.log("lisprice called", done);
+  //     if (result) {
+  //       console.log("List Price Result:", result);
+  //     } else {
+  //       throw new Error("listprice is not working");
+  //       // toast.error("listprice is not working");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error listing price:", error);
+  //     toast.error("Error listing price");
+  //     return error; // Return error
+  //   }
+  // };
 
   const getAddedNftDetails = async (nftDetails) => {
     setNftCardsList([...nftCardsList, nftDetails]);
