@@ -18,8 +18,11 @@ const afterPaymentFlow = async (
       from_subaccount: [],
       created_at_time: [],
     };
-
+    console.log(sendAmount, subAccount, metaData);
+    console.log(transactionArg);
+    console.log(ledgerActor);
     const sendBalanceResult = await ledgerActor.send_dfx(transactionArg);
+    console.log(sendBalanceResult);
     if (BigInt(sendBalanceResult) > 0) {
       const response = await backendActor.settlepurchase(
         Principal.fromText(collectionId),
@@ -34,14 +37,14 @@ const afterPaymentFlow = async (
         if (finalResult === undefined) {
           console.log("congratutation");
           return true;
-        }else{
+        } else {
           console.log("balance settelment failed");
           return false;
         }
       }
     } else {
       console.log("no balance");
-      return false
+      return false;
     }
   } catch (error) {
     console.error("Error in afterPaymentFlow:", error);

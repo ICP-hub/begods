@@ -22,7 +22,7 @@ const NftDetails = () => {
   console.log(collectiondata);
   console.log(nftId);
 
-  const quantity = Number(nftdata?.[4]);
+  // const quantity = Number(nftdata?.[4]);
   // console.log(quantity);
   const tokenindex = nftdata?.[0];
   const userid = nftdata?.[1];
@@ -83,102 +83,102 @@ const NftDetails = () => {
 
   const owner = singletokendata?.[0]?.[1];
   const isOwned = singletokendata?.[0]?.[4];
-  console.log(nftId);
+  // console.log(nftId);
 
-  const callingbutton = async () => {
-    console.log("callingbutton called");
-    setLoading(true);
-    // Calculate the first NFT index
-    const nftFirstindex = tokenindex - quantity + 1;
-    console.log("NFT Range:", nftFirstindex, "to", tokenindex - 1);
-    const principal = Principal.fromText(nftId);
+  // const callingbutton = async () => {
+  //   console.log("callingbutton called");
+  //   setLoading(true);
+  //   // Calculate the first NFT index
+  //   const nftFirstindex = tokenindex - quantity + 1;
+  //   console.log("NFT Range:", nftFirstindex, "to", tokenindex - 1);
+  //   const principal = Principal.fromText(nftId);
 
-    // const res = await backendActor?.getNftTokenId(principal, tokenindex);
-    // console.log(res);
+  //   // const res = await backendActor?.getNftTokenId(principal, tokenindex);
+  //   // console.log(res);
 
-    const promises = [];
+  //   const promises = [];
 
-    // Loop through the range of token indices
-    for (let index = nftFirstindex; index < tokenindex; index++) {
-      console.log("Processing index:", index);
-      promises.push(getNftTokenIdd(principal, index)); // Collect promises
-    }
+  //   // Loop through the range of token indices
+  //   for (let index = nftFirstindex; index < tokenindex; index++) {
+  //     console.log("Processing index:", index);
+  //     promises.push(getNftTokenIdd(principal, index)); // Collect promises
+  //   }
 
-    // Wait for all calls to complete
-    try {
-      await Promise.all(promises);
-      console.log("All NFTs processed successfully");
-      setLoading(false);
-      toast.success("All NFTs price processed successfully");
-    } catch (error) {
-      console.error("Error processing NFTs:", error);
-    }
-  };
+  //   // Wait for all calls to complete
+  //   try {
+  //     await Promise.all(promises);
+  //     console.log("All NFTs processed successfully");
+  //     setLoading(false);
+  //     toast.success("All NFTs price processed successfully");
+  //   } catch (error) {
+  //     console.error("Error processing NFTs:", error);
+  //   }
+  // };
 
-  const getNftTokenIdd = async (collectionId, nftIdentifier) => {
-    console.log("getNftTokenId called with:", collectionId, nftIdentifier);
+  // const getNftTokenIdd = async (collectionId, nftIdentifier) => {
+  //   console.log("getNftTokenId called with:", collectionId, nftIdentifier);
 
-    try {
-      // Simulate API call to fetch NFT token ID
-      const res = await backendActor?.getNftTokenId(
-        collectionId,
-        nftIdentifier
-      ); // Replace with your actual API call
-      console.log("NFT Token ID Response:", res);
+  //   try {
+  //     // Simulate API call to fetch NFT token ID
+  //     const res = await backendActor?.getNftTokenId(
+  //       collectionId,
+  //       nftIdentifier
+  //     ); // Replace with your actual API call
+  //     console.log("NFT Token ID Response:", res);
 
-      // If a valid response is received, call listPrice
-      if (res) {
-        await listPrice(collectionId, res, price);
-      } else {
-        console.warn("Invalid response for NFT Identifier:", nftIdentifier);
-      }
-    } catch (error) {
-      console.error(
-        "Error in getNftTokenId for NFT Identifier:",
-        nftIdentifier,
-        error
-      );
-      toast.error("Error fetching NFT Token ID");
-    }
-  };
+  //     // If a valid response is received, call listPrice
+  //     if (res) {
+  //       await listPrice(collectionId, res, price);
+  //     } else {
+  //       console.warn("Invalid response for NFT Identifier:", nftIdentifier);
+  //     }
+  //   } catch (error) {
+  //     console.error(
+  //       "Error in getNftTokenId for NFT Identifier:",
+  //       nftIdentifier,
+  //       error
+  //     );
+  //     toast.error("Error fetching NFT Token ID");
+  //   }
+  // };
 
-  const listPrice = async (principal, tokenidentifier, price) => {
-    console.log("listPrice called with:", principal, tokenidentifier, price);
+  // const listPrice = async (principal, tokenidentifier, price) => {
+  //   console.log("listPrice called with:", principal, tokenidentifier, price);
 
-    try {
-      const finalPrice = price || null;
-      const priceE8s = finalPrice ? finalPrice : null;
+  //   try {
+  //     const finalPrice = price || null;
+  //     const priceE8s = finalPrice ? finalPrice : null;
 
-      const request = {
-        token: tokenidentifier,
-        from_subaccount: [],
-        price: priceE8s ? [priceE8s] : [],
-      };
+  //     const request = {
+  //       token: tokenidentifier,
+  //       from_subaccount: [],
+  //       price: priceE8s ? [priceE8s] : [],
+  //     };
 
-      const result = await backendActor?.listprice(principal, request);
-      if (result) {
-        console.log("List Price Result:", result);
-      } else {
-        throw new Error("listprice is not working");
-      }
-    } catch (error) {
-      console.error("Error listing price for token:", tokenidentifier, error);
-      toast.error("Error listing price");
-    }
-  };
+  //     const result = await backendActor?.listprice(principal, request);
+  //     if (result) {
+  //       console.log("List Price Result:", result);
+  //     } else {
+  //       throw new Error("listprice is not working");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error listing price for token:", tokenidentifier, error);
+  //     toast.error("Error listing price");
+  //   }
+  // };
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#282828">
       <div className="2xl:mt-[10vh] w-full sm:w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] mx-auto relative">
         {/* Top Corner Button */}
-        <div className="absolute top-4 right-4">
+        {/* <div className="absolute top-4 right-4">
           <button
             onClick={callingbutton}
             className="bg-yellow-400 text-black font-semibold px-4 py-2 rounded-md shadow-md hover:bg-yellow-500"
           >
             for calling listprice
           </button>
-        </div>
+        </div> */}
 
         {/* Back Button */}
         <div className="flex items-center justify-start w-full mb-5 pt-9 hover:cursor-pointer">
