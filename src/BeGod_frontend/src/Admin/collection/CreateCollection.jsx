@@ -29,8 +29,7 @@ import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler"
 
 const CreateCollection = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+
   const [limit, setLimit] = useState(0);
   const [logo, setLogo] = useState(null);
   const [nfts, setNfts] = useState(0);
@@ -39,7 +38,7 @@ const CreateCollection = () => {
   const [modal, setModal] = useState(false);
   const [nftCardsList, setNftCardsList] = useState([]);
   const { backendActor, canisterId } = useAuth();
-  const [Ufile, setUFile] = useState([]);
+
   const [base64String, setBase64String] = useState("");
   const [nftType, setnfttype] = useState("");
   const [nftname, setnftname] = useState("");
@@ -55,7 +54,7 @@ const CreateCollection = () => {
   const [mintimagebase, setmintimagebase] = useState();
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [collColor, setCollColor] = useState("Green");
+
   const [nftcolor, setnftcolor] = useState("");
   const [Success, setsuccess] = useState(false);
   const [done, setDone] = useState(0);
@@ -66,6 +65,18 @@ const CreateCollection = () => {
   const { user } = useSelector((state) => state.auth);
   const principal_id = user;
 
+  const [formData, setFormData] = useState({
+    name: "",
+    description: "",
+    collColor: "Green",
+    logo: null,
+  });
+  console.log(formData);
+  const [name, setName] = useState(formData.name || "");
+  const [description, setDescription] = useState(formData.description || "");
+  const [collColor, setCollColor] = useState(formData.collColor || "Green");
+  const [Ufile, setUFile] = useState(formData.Ufile || []);
+  console.log(description);
   // backendActor?.CanisterActor?.createExtCollection;
   // console.log(createExtCollection);
 
@@ -127,6 +138,7 @@ const CreateCollection = () => {
   const handleFiles = async (files) => {
     console.log("Uploaded files:", files);
     setUFile(files);
+    setFormData((prev) => ({ ...prev, logo: files }));
 
     const file = files[0]; // Get the first uploaded file
     if (file) {
@@ -370,7 +382,7 @@ const CreateCollection = () => {
       console.log(principal, nftname, nftdescription, nftimage, nftquantity);
 
       const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
-
+      setDone((done) => done + 1);
       const result = await backendActor?.mintExtNonFungible2(
         principal,
         nftname,
@@ -381,9 +393,11 @@ const CreateCollection = () => {
         Number(nftquantity),
         es8_price ? [es8_price] : []
       );
-      if (totalnft != 1) {
-        setDone((done) => done + 1);
-      }
+      // if (totalnft != 1) {
+      //   setDone((done) => done + 1);
+      // } else {
+      //   toast.success("please wait NFT is Minting");
+      // }
 
       console.log(result, "nft mint data");
       // const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
@@ -528,6 +542,14 @@ const CreateCollection = () => {
     let hasError = false;
     let errorShown = false;
     try {
+      toast("Creating Collection, Please Wait! ...", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       const answ = await createExtData(
         name,
         description,
@@ -535,6 +557,7 @@ const CreateCollection = () => {
         base64String
       );
       console.log(answ);
+
       if (answ instanceof Error) {
         hasError = true;
         console.log("inside if of haserror");
@@ -547,6 +570,15 @@ const CreateCollection = () => {
       }
       console.log(hasError, errorShown);
       setcanId(answ);
+
+      toast("NFT Minting, Please Wait! ...", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       if (nftCardsList && nftCardsList.length > 0 && !hasError) {
         for (let val of nftCardsList) {
           try {
@@ -602,7 +634,7 @@ const CreateCollection = () => {
       if (!hasError) {
         setTimeout(() => {
           navigate("/admin/collection");
-        }, 5000);
+        }, 1000);
       }
     } catch (error) {
       if (!errorShown) {
@@ -700,6 +732,7 @@ const CreateCollection = () => {
                             value = value.trimStart();
                             if (value.trim() !== "") {
                               setName(value);
+                              setFormData((prev) => ({ ...prev, name: value }));
                             } else {
                               setName("");
                             }
@@ -721,6 +754,7 @@ const CreateCollection = () => {
                         </span>
                         <LogoImageUploader
                           captureUploadedbloburl={handleFiles}
+
                           // captureuploadedurl={setcollectionImageURL}
                         />
                       </label>
@@ -730,11 +764,16 @@ const CreateCollection = () => {
                   <label className="mt-[20px] w-[100%] flex flex-col text-[#FFFFFF] gap-2 md:gap-4 text-[14px] md:text-[20px] leading-[25px]">
                     Description:
                     <textarea
+                      value={description}
                       onChange={(e) => {
                         const value = e.target.value;
                         // Check if the value is not just whitespace
                         if (value.trim() !== "") {
                           setDescription(value);
+                          setFormData((prev) => ({
+                            ...prev,
+                            description: value,
+                          }));
                         } else {
                           setDescription(""); // or handle as needed
                         }
@@ -749,8 +788,13 @@ const CreateCollection = () => {
                     Type color:
                     <select
                       className=" h-[38px] bg-[#29292C] text-[16px] p-2 rounded-md text-[#8a8686]"
-                      value={collColor}
-                      onChange={(e) => setCollColor(e.target.value)}
+                      // value={collColor}
+                      // onChange={(e) => setCollColor(e.target.value)}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setCollColor(value);
+                        setFormData((prev) => ({ ...prev, collColor: value }));
+                      }}
                     >
                       <option
                         value="Green"

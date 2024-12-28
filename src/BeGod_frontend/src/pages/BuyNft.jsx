@@ -259,7 +259,7 @@ const BuyNft = () => {
       standards: parsedMetadata.standards,
       chains: parsedMetadata.chains,
       date: date,
-      contactAddress: principal,
+      contactAddress: process.env.CANISTER_ID_BEGOD_BACKEND,
       artist,
       type,
       season,
