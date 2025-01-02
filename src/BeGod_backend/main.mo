@@ -758,7 +758,7 @@ actor Main {
     return List.toArray(resultList);
     };
 
-    public shared ({ caller = user }) func mintExtNonFungible4(
+    public shared ({ caller = user }) func mintExtNonFungible3(
     _collectionCanisterId : Principal,
     name : Text,
     desc : Text,
