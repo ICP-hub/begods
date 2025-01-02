@@ -18,6 +18,7 @@ import { RxCross2 } from "react-icons/rx";
 import { IoCheckmarkOutline } from "react-icons/io5";
 import { Box, Button } from "@chakra-ui/react";
 import { BeGod_assethandler } from "../../../../declarations/BeGod_assethandler";
+import { useNavigate } from "react-router-dom";
 
 const cardTypeList = [
   {
@@ -97,6 +98,8 @@ function CollectionDetails() {
   const { id } = useParams();
   const location = useLocation();
   const { collectiondata } = location.state || {};
+
+  const navigate = useNavigate();
 
   const toggleModal = () => {
     setModal(!modal);
@@ -302,8 +305,28 @@ function CollectionDetails() {
         Number(nftquantity),
         es8_price ? [es8_price] : []
       );
-
       console.log(result, "nft mint data");
+
+      if (result instanceof Error) {
+        toast.error(result);
+      } else {
+        // await getListing(principal);
+        toast.success("NFT added");
+        toast("Fetching NFTs, Please Wait! ...", {
+          icon: "⚠️",
+          style: {
+            borderRadius: "10px",
+            background: "#333",
+            color: "#fff",
+          },
+        });
+        // await fetchNFTs();
+        navigate("/admin/collection");
+        // setTimeout(() => {
+        //   navigate("/admin/collection");
+        // }, 1000);
+      }
+
       // const es8_price = parseInt(parseFloat(nftprice) * 100000000);
       // console.log(es8_price, "price");
       // if (result && result.length > 0) {
@@ -321,10 +344,11 @@ function CollectionDetails() {
       // } else {
       //   throw new Error("Minting failed");
       // }
+      return result;
     } catch (error) {
       console.error("Error minting NFT:", error);
       toast.error("Error minting NFT");
-      return error; // Return error
+      return error;
     }
   };
 
@@ -407,6 +431,14 @@ function CollectionDetails() {
     console.log(nftDetails);
 
     try {
+      toast("NFT Minting, Please Wait! ...", {
+        icon: "⚠️",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       const mintResult = await mintNFT(
         principalStringg,
         nftDetails.nftName,
@@ -427,29 +459,31 @@ function CollectionDetails() {
         // nftDetails.imageurl3,
         // nftDetails.imageurl4
       );
+      console.log(mintResult);
 
-      if (mintResult instanceof Error) {
-        toast.error(mintResult);
-      } else {
-        // await getListing(principal);
-        toast.success("NFT added");
-        toast("Fetching NFTs, Please Wait! ...", {
-          icon: "⚠️",
-          style: {
-            borderRadius: "10px",
-            background: "#333",
-            color: "#fff",
-          },
-        });
-
-        // Fetch the updated list of NFTs
-        await fetchNFTs();
-      }
+      // if (mintResult instanceof Error) {
+      //   toast.error(mintResult);
+      // } else {
+      //   // await getListing(principal);
+      //   toast.success("NFT added");
+      //   toast("Fetching NFTs, Please Wait! ...", {
+      //     icon: "⚠️",
+      //     style: {
+      //       borderRadius: "10px",
+      //       background: "#333",
+      //       color: "#fff",
+      //     },
+      //   });
+      //   // await fetchNFTs();
+      //   setTimeout(() => {
+      //     navigate("/admin/collection");
+      //   }, 1000);
+      // }
     } catch (error) {
       console.error("Error in get added nft: ", error);
       toast.error("Error in get added nft");
     } finally {
-      setLoading(false); // Ensure loading state is reset
+      setLoading(false);
     }
   };
 
