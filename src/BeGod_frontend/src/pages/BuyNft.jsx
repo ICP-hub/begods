@@ -9,6 +9,7 @@ import { RiFileCopyLine } from "react-icons/ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
 import { Link, useLocation, useParams } from "react-router-dom";
+
 import { useAuth } from "../utils/useAuthClient.jsx";
 import { Principal } from "@dfinity/principal";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
@@ -785,6 +786,14 @@ const BuyNft = () => {
                 {!showError.show &&
                   currentBuyingStatus === buyingStatus.payment && (
                     <div className="h-100% flex flex-col items-center justify-center pt-5  ">
+                      <button
+                        className="absolute top-2 right-2 text-white text-xl z-20 hover:text-red-500 transition"
+                        onClick={() => {
+                          setbuyPopup(false);
+                        }}
+                      >
+                        <RxCross2 />
+                      </button>
                       <div className="flex items-center w-[90%]">
                         {popUpFirstLoading ? (
                           <div className="relative flex items-center justify-center ">
