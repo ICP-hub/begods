@@ -141,7 +141,8 @@ const BuyNft = () => {
         Principal.fromText(principal),
         transationId,
         collectionId,
-        subAccount
+        subAccount,
+        setbuyPopup
       );
       console.log(resultTxn, "this is the finale result");
       if (resultTxn === true) {
