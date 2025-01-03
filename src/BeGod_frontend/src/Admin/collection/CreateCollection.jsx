@@ -383,7 +383,7 @@ const CreateCollection = () => {
 
       const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
       setDone((done) => done + 1);
-      const result = await backendActor?.mintExtNonFungible2(
+      const result = await backendActor?.mintExtNonFungible3(
         principal,
         nftname,
         nftdescription,
@@ -400,6 +400,7 @@ const CreateCollection = () => {
       // }
 
       console.log(result, "nft mint data");
+      return result;
       // const es8_price = parseInt(parseFloat(nftPrice) * 100000000);
       // console.log(es8_price, "price");
       // console.log(result, "nft mint data result");

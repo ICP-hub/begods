@@ -1,4 +1,6 @@
 import { Principal } from "@dfinity/principal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const afterPaymentFlow = async (
   backendActor,
@@ -48,6 +50,7 @@ const afterPaymentFlow = async (
     }
   } catch (error) {
     console.error("Error in afterPaymentFlow:", error);
+
     throw error;
   }
 };
@@ -74,7 +77,8 @@ export const transferApprove = async (
   principal,
   transationId,
   collectionId,
-  subAccount
+  subAccount,
+  setbuyPopup
 ) => {
   let metaData = null;
   try {
@@ -143,6 +147,18 @@ export const transferApprove = async (
     }
   } catch (error) {
     console.error("Error in transferApprove:", error);
+    toast.error("Payment Cancelled!", {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+
+    setbuyPopup(false);
     throw error;
   }
 };

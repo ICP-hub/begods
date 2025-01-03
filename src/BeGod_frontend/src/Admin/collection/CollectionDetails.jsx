@@ -295,7 +295,7 @@ function CollectionDetails() {
 
       const es8_price = parseInt(parseFloat(nftprice) * 100000000);
 
-      const result = await backendActor?.mintExtNonFungible2(
+      const result = await backendActor?.mintExtNonFungible3(
         principal,
         nftname,
         nftdescription,
@@ -306,6 +306,9 @@ function CollectionDetails() {
         es8_price ? [es8_price] : []
       );
       console.log(result, "nft mint data");
+      // if (result?.status == "Error: Not all tokens were minted successfully.") {
+      //   toast.error(result?.status);
+      // }
 
       if (result instanceof Error) {
         toast.error(result);
