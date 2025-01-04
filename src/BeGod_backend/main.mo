@@ -758,6 +758,90 @@ actor Main {
     return List.toArray(resultList);
     };
 
+    // public shared ({ caller = user }) func mintExtNonFungible3(
+    // _collectionCanisterId : Principal,
+    // name : Text,
+    // desc : Text,
+    // asset : Text,
+    // thumb : Text,
+    // metadata : ?MetadataContainer,
+    // amount : Nat,
+    // price : ?Nat64
+    // ) : async { status : Text; tokens : [(TokenIndex, TokenIdentifier, Result.Result<(), CommonError>)] } {
+    // // Create a collection canister actor for ext_mint
+    // let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //     ext_mint : (
+    //         request : [(AccountIdentifier, Types.Metadata)]
+    //     ) -> async [TokenIndex];
+    // };
+
+    // // Prepare metadata for non-fungible tokens
+    // let metadataNonFungible : Types.Metadata = #nonfungible {
+    //     name = name;
+    //     description = desc;
+    //     asset = asset;
+    //     thumbnail = thumb;
+    //     metadata = metadata;
+    // };
+
+    // // Prepare receiver's AccountIdentifier
+    // let receiver = AID.fromPrincipal(user, null);
+    // var request : [(AccountIdentifier, Types.Metadata)] = [];
+    // var i : Nat = 0;
+
+    // // Populate mint request for the specified amount
+    // while (i < amount) {
+    //     request := Array.append(request, [(receiver, metadataNonFungible)]);
+    //     i := i + 1;
+    // };
+
+    // // Mint NFTs
+    // let extMint = await collectionCanisterActor.ext_mint(request);
+
+    // // Debug statement for successful minting
+    // Debug.print("Tokens have been minted successfully.");
+
+    // // Check if the minted tokens match the requested amount
+    // if (Array.size(extMint) != amount) {
+    //     return {
+    //         status = "Error: Not all tokens were minted successfully.";
+    //         tokens = [];
+    //     };
+    // };
+
+    // // Create a marketplace actor for listing price
+    // let marketplaceActor = actor (Principal.toText(_collectionCanisterId)) : actor {
+    //     ext_marketplaceList : (caller : Principal, request : ListRequest) -> async Result.Result<(), CommonError>;
+    // };
+
+    // // Collect results
+    // var resultList = List.nil<(TokenIndex, TokenIdentifier, Result.Result<(), CommonError>)>();
+
+    // for (i in extMint.vals()) {
+    //     // Retrieve token identifier
+    //     let _tokenIdentifier = await getNftTokenId(_collectionCanisterId, i);
+
+    //     // Prepare ListRequest with the same price for all tokens
+    //     let listRequest : ListRequest = {
+    //         token = _tokenIdentifier;
+    //         price = price; // Optional price
+    //         from_subaccount = null; // Optional field, set to null
+    //     };
+
+    //     // List price for the NFT
+    //     let listPriceResult = await marketplaceActor.ext_marketplaceList(user, listRequest);
+
+    //     // Collect result
+    //     resultList := List.push((i, _tokenIdentifier, listPriceResult), resultList);
+    // };
+
+    // // Return status and tokens
+    // return {
+    //     status = "Tokens minted successfully";
+    //     tokens = List.toArray(resultList);
+    // };
+    // };
+
     public shared ({ caller = user }) func mintExtNonFungible3(
     _collectionCanisterId : Principal,
     name : Text,
@@ -767,7 +851,7 @@ actor Main {
     metadata : ?MetadataContainer,
     amount : Nat,
     price : ?Nat64
-    ) : async { status : Text; tokens : [(TokenIndex, TokenIdentifier, Result.Result<(), CommonError>)] } {
+    ) : async [(TokenIndex, TokenIdentifier, Result.Result<(), CommonError>)] {
     // Create a collection canister actor for ext_mint
     let collectionCanisterActor = actor (Principal.toText(_collectionCanisterId)) : actor {
         ext_mint : (
@@ -786,10 +870,10 @@ actor Main {
 
     // Prepare receiver's AccountIdentifier
     let receiver = AID.fromPrincipal(user, null);
-    var request : [(AccountIdentifier, Types.Metadata)] = [];
-    var i : Nat = 0;
 
     // Populate mint request for the specified amount
+    var request : [(AccountIdentifier, Types.Metadata)] = [];
+    var i : Nat = 0;
     while (i < amount) {
         request := Array.append(request, [(receiver, metadataNonFungible)]);
         i := i + 1;
@@ -798,15 +882,8 @@ actor Main {
     // Mint NFTs
     let extMint = await collectionCanisterActor.ext_mint(request);
 
-    // Debug statement for successful minting
-    Debug.print("Tokens have been minted successfully.");
-
-    // Check if the minted tokens match the requested amount
     if (Array.size(extMint) != amount) {
-        return {
-            status = "Error: Not all tokens were minted successfully.";
-            tokens = [];
-        };
+        Debug.trap("Error: Not all tokens were minted successfully.");
     };
 
     // Create a marketplace actor for listing price
@@ -814,12 +891,13 @@ actor Main {
         ext_marketplaceList : (caller : Principal, request : ListRequest) -> async Result.Result<(), CommonError>;
     };
 
-    // Collect results
-    var resultList = List.nil<(TokenIndex, TokenIdentifier, Result.Result<(), CommonError>)>();
+    // Prepare results array
+    var results : [(TokenIndex, TokenIdentifier, Result.Result<(), CommonError>)] = [];
 
-    for (i in extMint.vals()) {
+    // Process minted tokens and prepare results
+    for (index in extMint.vals()) {
         // Retrieve token identifier
-        let _tokenIdentifier = await getNftTokenId(_collectionCanisterId, i);
+        let _tokenIdentifier = await getNftTokenId(_collectionCanisterId, index);
 
         // Prepare ListRequest with the same price for all tokens
         let listRequest : ListRequest = {
@@ -831,17 +909,13 @@ actor Main {
         // List price for the NFT
         let listPriceResult = await marketplaceActor.ext_marketplaceList(user, listRequest);
 
-        // Collect result
-        resultList := List.push((i, _tokenIdentifier, listPriceResult), resultList);
+        // Add the result to the results array
+        results := Array.append(results, [(index, _tokenIdentifier, listPriceResult)]);
     };
 
-    // Return status and tokens
-    return {
-        status = "Tokens minted successfully";
-        tokens = List.toArray(resultList);
+    // Return the array of results
+    return results;
     };
-    };
-
 
 
     // Minting  a Fungible token pass the collection canisterId in which you want to mint and the required details to add, this enables minting multiple tokens
