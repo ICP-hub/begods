@@ -83,6 +83,8 @@ const Modal = (props) => {
     // event.preventDefault();
     if (nftPrice == 0) {
       toast.error("Enter the price greater than 0");
+    } else if (nftQuantity > 150) {
+      toast.error("Enter the Quantity less than 150");
     } else if (
       nftName &&
       nftType &&
@@ -386,7 +388,7 @@ const Modal = (props) => {
               }}
               type="text"
               placeholder="Enter Artist Name"
-              className="pl-4 rounded-md h-[60px] p-2 bg-[#29292C] text-[16px] text-[#8a8686]"
+              className="pl-4 rounded-md h-[40px] p-2 bg-[#29292C] text-[16px] text-[#8a8686]"
             />
           </label>
         </div>
