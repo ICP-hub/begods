@@ -50,8 +50,8 @@ const cardTypeList = [
     displayText: "Promo",
   },
   {
-    cardId: "MISC",
-    displayText: "Misc",
+    cardId: "Assets",
+    displayText: "Assets",
   },
 ];
 
