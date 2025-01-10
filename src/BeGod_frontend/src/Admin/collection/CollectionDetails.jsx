@@ -50,8 +50,8 @@ const cardTypeList = [
     displayText: "Promo",
   },
   {
-    cardId: "MISC",
-    displayText: "Misc",
+    cardId: "Assets",
+    displayText: "Assets",
   },
 ];
 
@@ -94,10 +94,32 @@ function CollectionDetails() {
   let [currentpage, setcurrentpage] = useState(1);
   const [totalpage, settotalpage] = useState(0);
   const [loading, setLoading] = useState(false);
+  // const [showLoader, setShowLoader] = useState(false);
   const { backendActor, canisterId } = useAuth();
   const { id } = useParams();
   const location = useLocation();
   const { collectiondata } = location.state || {};
+
+  useEffect(() => {
+    let loaderTimer;
+    let fetchNFTTimer;
+
+    if (loading) {
+      fetchNFTTimer = setTimeout(() => {
+        console.log("in use effect fetchnft called");
+        fetchNFTs(); // we use here route to open collection jisse refresh ki problem nhi hogi
+      }, 41000);
+      loaderTimer = setTimeout(() => {
+        console.log("in use effect loader called");
+        setLoading(false);
+      }, 45000);
+    }
+
+    return () => {
+      clearTimeout(fetchNFTTimer);
+      clearTimeout(loaderTimer);
+    };
+  }, [loading]);
 
   const navigate = useNavigate();
 
@@ -323,8 +345,8 @@ function CollectionDetails() {
             color: "#fff",
           },
         });
-        // await fetchNFTs();
-        navigate("/admin/collection");
+        await fetchNFTs();
+        // navigate("/admin/collection");
         // setTimeout(() => {
         //   navigate("/admin/collection");
         // }, 1000);
@@ -352,6 +374,8 @@ function CollectionDetails() {
       console.error("Error minting NFT:", error);
       toast.error("Error minting NFT");
       return error;
+    } finally {
+      setLoading(false);
     }
   };
 
