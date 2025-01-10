@@ -150,9 +150,9 @@ const Hero = () => {
   const handleCurrentIndex = async (index) => {
     const currentCollectionId = collections[index].collectionId;
     const color = collections[index].shadowColor;
-    if (currentCollectionId === collections[currentIndex].collectionId) {
-      return;
-    }
+    // if (currentCollectionId === collections[currentIndex].collectionId) {
+    //   return;
+    // }
     updateTotalPages(1);
     if (index >= visibleButtons - 1 && index >= startIndex) {
       if (index != collections.length - 1) {
@@ -200,6 +200,7 @@ const Hero = () => {
   useEffect(() => {
     getCollections();
   }, []);
+
   const getCollections = async () => {
     const result = await backendActor?.getAllCollections();
     if (result.length === 0) {
@@ -261,6 +262,7 @@ const Hero = () => {
       currentCollectionId,
       color
     );
+    console.log(currentCollectionNfts);
     if (currentCollectionNfts.length > 0) {
       updateFilteredList(currentCollectionNfts);
       updateSelectedCollectionNftCardsList(currentCollectionNfts);
